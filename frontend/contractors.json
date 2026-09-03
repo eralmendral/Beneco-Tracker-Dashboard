@@ -1,0 +1,594 @@
+[
+  {
+    "id": 1,
+    "company": "ACOSTA, MANOLITO O.",
+    "address": "RIZAL PARK, SHANUM ST., BAGUIO CITY",
+    "business": "ACOSTA ELECTRICAL AND PLUMBING SUPPLIES",
+    "contact": "09393376701 442-6319",
+    "prc": "REE"
+  },
+  {
+    "id": 2,
+    "company": "ADAPANG, WALTER L.",
+    "address": "MAYANGYANG, PALASAN, SUYOC, MANKAYAN, BENGUET",
+    "business": "WLA ENGINEERING SERVICES",
+    "contact": "09126731963",
+    "prc": "RME"
+  },
+  {
+    "id": 3,
+    "company": "ALBIENTO, ORLANDO R.",
+    "address": "5C UPPER PHIL-AM, BAGUIO CITY",
+    "business": "ALBIENTO ELECTRICAL SERVICES",
+    "contact": "09269086399 09397909314",
+    "prc": "REE"
+  },
+  {
+    "id": 4,
+    "company": "ALIMONDO, JOEL D.",
+    "address": "SWAMP PUGUIS, LA TRINIDAD",
+    "business": "QPJ GENERAL ENG'G. CONS AND SUPPLY",
+    "contact": "09184159138",
+    "prc": "REE"
+  },
+  {
+    "id": 5,
+    "company": "ANDULAY, JOSE C.",
+    "address": "032 PUROK 26 IRISAN, BAGUIO CITY",
+    "business": "J.C. ANDULAY CONSTRUCTION AND SUPPLY",
+    "contact": "09066070456 09296238759",
+    "prc": "RME"
+  },
+  {
+    "id": 6,
+    "company": "AQUINTEY, JOMEL D.",
+    "address": "1119 KIAS, VIRAC, ITOGON, BENGUET",
+    "business": "JOMDA ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09176565100 09292064272",
+    "prc": "REE"
+  },
+  {
+    "id": 7,
+    "company": "ARIOLA, MAXIMINO JR.",
+    "address": "SAN LUIS VILLAGE, BAGUIO CITY",
+    "business": "MZAJR ELECTRICAL WORKS AND SERVICES",
+    "contact": "09494832067",
+    "prc": "RME"
+  },
+  {
+    "id": 8,
+    "company": "ASINGCO, MARCOS T.",
+    "address": "LENGAOAN, BUGUIAS, BENGUET",
+    "business": "MTA ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09093580339",
+    "prc": "REE"
+  },
+  {
+    "id": 9,
+    "company": "ASIONG, EDGAR O.",
+    "address": "KM. 16, AMBASSADOR, TUBLAY, BENGUET",
+    "business": "EDREI'S ELECTRICAL WORKS",
+    "contact": "09102575253",
+    "prc": "RME"
+  },
+  {
+    "id": 10,
+    "company": "ATINYAO, DELFIN B.",
+    "address": "WEST BUYAGAN, POBLACION, LA TRINIDAD, BENGUET",
+    "business": "POWERFOOLZ ELECTRICAL SERVICES",
+    "contact": "09092165653",
+    "prc": "RME"
+  },
+  {
+    "id": 11,
+    "company": "BADKIYENG, PETER K.",
+    "address": "362PUROK 1 PINSAO PROPER, BAGUIO CITY",
+    "business": "PBECS ELECTRICAL AND CONSTRUCTION SERVICES",
+    "contact": "09386290544 09761822843",
+    "prc": "RME"
+  },
+  {
+    "id": 12,
+    "company": "BALINGGAN, LUCIO D.",
+    "address": "2ND FLOOR EPIPHANY COMMERCIAL BUILDING, KM. 5, BETAG, LA TRINIDAD",
+    "business": "L.D. BALINGGAN ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09102373341",
+    "prc": "RME"
+  },
+  {
+    "id": 13,
+    "company": "BALOKEY, ROY D.",
+    "address": "94 ADD RD., PRK. 18, IRISAN, BAGUIO CITY",
+    "business": "BALOKEY ELECTRICAL SERVICES",
+    "contact": "09385932152",
+    "prc": "RME"
+  },
+  {
+    "id": 14,
+    "company": "BANGLIG, VILMA J.",
+    "address": "JC-274 KM.5, PICO, LA TRINIDAD, BENGUET",
+    "business": "DOMINION - GENERAL - ENGINEERING AND CONSTRUCTION SERVICES",
+    "contact": "09121978481",
+    "prc": "REE"
+  },
+  {
+    "id": 15,
+    "company": "BASILIO, GARYFRED C.",
+    "address": "AMOCAO, BAYABAS, SABLAN, BENGUET",
+    "business": "DUNNSEFFLY ENGINEERING SERVICES",
+    "contact": "09664988227",
+    "prc": "PEE"
+  },
+  {
+    "id": 16,
+    "company": "BIO, RONALD P.",
+    "address": "TILI, SHILAN, LA TRINIDAD, BENGUET",
+    "business": "RONALD P. BIO ELECTRICAL SERVICES",
+    "contact": "09287019551",
+    "prc": "RME"
+  },
+  {
+    "id": 17,
+    "company": "BONAO, HAROLD K.",
+    "address": "961 TIMBERYARD, VIRAC, ITOGON, BENGUET",
+    "business": "JJHB ELECTRICAL WORKS AND SERVICES",
+    "contact": "09770549152 09622630750",
+    "prc": "RME"
+  },
+  {
+    "id": 18,
+    "company": "CABATAN, SAMSON B.",
+    "address": "ABATAN, BUGUIAS, BENGUET",
+    "business": "BUGUIAS ELECTRICAL ENGINEERING SERVICES AND SUPPLY",
+    "contact": "09092101264",
+    "prc": "REE"
+  },
+  {
+    "id": 19,
+    "company": "CACAY, VALENTINE",
+    "address": "40 ZAMORA ST. BAGUIO CITY",
+    "business": "VBC ELECTRICAL SERVICES",
+    "contact": "09494521452",
+    "prc": "RME"
+  },
+  {
+    "id": 20,
+    "company": "CALANIO, FRANCIS",
+    "address": "KM. 4 MARCOS HIGHWAY, STO, TOMAS PROPER",
+    "business": "GRICK ENTERPRISE AND ENGINEERING SERVICES",
+    "contact": "09988537133 09175930352",
+    "prc": "PEE"
+  },
+  {
+    "id": 21,
+    "company": "CARDENAS, KENT A.",
+    "address": "155 STO. TOMAS PROPER, MARCOS HIGHWAY, B.C.",
+    "business": "KAC ELECTRICAL SERVICES",
+    "contact": "09076711996 09357504684",
+    "prc": "RME"
+  },
+  {
+    "id": 22,
+    "company": "COMEDIS, DELFREDO J.",
+    "address": "APNI, SAN PASCUAL, TUBA, BENGUET",
+    "business": "HYRAX ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09212242365 Tel no. 620-5887",
+    "prc": "REE"
+  },
+  {
+    "id": 23,
+    "company": "CORDERO, EUGENIO O.",
+    "address": "165 GREENWATER VILLAGE, BAGUIO CITY",
+    "business": "CORDERO ENGINEERING OPERATIONS",
+    "contact": "09399444992 09653699799",
+    "prc": "RME"
+  },
+  {
+    "id": 24,
+    "company": "DACWAG, VICTOR O.",
+    "address": "0819 NARRA ALLEY, KM3. ASIN ROAD, BAGUIO CITY",
+    "business": "DACWAG PLUMBING & ELECTRICAL SERVICES",
+    "contact": "09397598576",
+    "prc": "REE"
+  },
+  {
+    "id": 25,
+    "company": "DAGUPEN, FRANKLIN C.",
+    "address": "BALAKBAK, KAPANGAN, BENGUET",
+    "business": "FRADA ELECTRICAL SERVICES",
+    "contact": "09183587028",
+    "prc": "REE"
+  },
+  {
+    "id": 26,
+    "company": "DALAPUS, JASPER O.",
+    "address": "96 SAN CARLOS HEIGHTS, IRISAN, B.C.",
+    "business": "GOLINSAN ELECTRICAL SERVICES",
+    "contact": "09301632655",
+    "prc": "REE"
+  },
+  {
+    "id": 27,
+    "company": "DANIEL, JOSHVYNE DALE B.",
+    "address": "PATONGAO, GUSARAN, KABAYAN, BENGUET",
+    "business": "MJOLNIR.JDBD ELECTRICAL SERVICES",
+    "contact": "09464341732",
+    "prc": "REE"
+  },
+  {
+    "id": 28,
+    "company": "DANGPA, FERDINAND G.",
+    "address": "LUALHATI WRIGHT PARK, BAGUIO CITY",
+    "business": "F. G. DANGPA ELECTRICAL SERVICES",
+    "contact": "09182778148",
+    "prc": "RME"
+  },
+  {
+    "id": 29,
+    "company": "DE CASTRO, LIZARDO D.",
+    "address": "131 PUROK 24, MIDDLE SAN CARLOS HGTS., B.C",
+    "business": "ELIZARDO ELECTRICAL SERVICES",
+    "contact": "09464080652",
+    "prc": "RME"
+  },
+  {
+    "id": 30,
+    "company": "DULAWAN, RONY MENEZ T.",
+    "address": "102 BENGAO, BAKAKENG CENTRAL",
+    "business": "LON SQUARED ENGINEERING SERVICES",
+    "contact": "09364036603 09487139459",
+    "prc": "REE"
+  },
+  {
+    "id": 31,
+    "company": "DULCE, RICARDO R.",
+    "address": "MA. BASA AT., PACDAL BAGUIO CITY",
+    "business": "RRD ELECTRICAL CONTRACTOR",
+    "contact": "09083169235",
+    "prc": "REE"
+  },
+  {
+    "id": 32,
+    "company": "DUPALI, RUBEN SR. B.",
+    "address": "401 UP CYPRESS, IRISAN, BAGUIO CITY",
+    "business": "DUPALI ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09284379810",
+    "prc": "RME"
+  },
+  {
+    "id": 33,
+    "company": "ESTEBAN, FRANCISCO G.",
+    "address": "222 PRK. 1, UPPER KM. 3, ASIN RD., BAGUIO CITY",
+    "business": "ESTEBAN ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09185164566 09453110865",
+    "prc": "RME"
+  },
+  {
+    "id": 34,
+    "company": "FONG, DENNIS C.",
+    "address": "FC 436 BALILI, LA TRINIDAD, BENGUET",
+    "business": "DENNIS FONG ELECTRICAL SERVICES",
+    "contact": "09187078705",
+    "prc": "RME"
+  },
+  {
+    "id": 35,
+    "company": "FONG, FERNANDO C.",
+    "address": "FC 436 BALILI, LA TRINIDAD, BENGUET",
+    "business": "FEYMAN FONG ELECTRICAL SERVICES",
+    "contact": "09422795958",
+    "prc": "RME"
+  },
+  {
+    "id": 36,
+    "company": "FORAYO, CELDAN N.",
+    "address": "B-KELTIPAN BLDG., 21 NAGUILIAN RD., KAYANG EXT., LABSAN, BAGUIO CITY",
+    "business": "CNF ELECTRICAL INSTALLATION SERVICES",
+    "contact": "09184028628",
+    "prc": "RME"
+  },
+  {
+    "id": 37,
+    "company": "GACAO, ANTHONY C.",
+    "address": "950 SKYVIEW, VIRAC, ITOGON, BENGUET",
+    "business": "ACG ELECTRICAL SERVICES",
+    "contact": "09613619055",
+    "prc": "PEE"
+  },
+  {
+    "id": 38,
+    "company": "GALLETES, RICARDO B.",
+    "address": "68 CYPRESS ALLEY KM. 3, ASIN ROAD",
+    "business": "RBG NOREYCA-JAY ELECTRICAL SERVICES",
+    "contact": "09683519013",
+    "prc": "RME"
+  },
+  {
+    "id": 39,
+    "company": "HAGGIBAT, CHRIS GILL P.",
+    "address": "29-A1 PINSAO PROPER, BAGUIO CITY",
+    "business": "HAGGEE ENGINEERING SERVICES",
+    "contact": "09369027535",
+    "prc": "REE"
+  },
+  {
+    "id": 40,
+    "company": "HIPOLITO, KERNELL C.",
+    "address": "536 CAMP ALLEN, BAGUIO CITY",
+    "business": "KRH ENGINEERING SERVICES",
+    "contact": "09183327767",
+    "prc": "REE"
+  },
+  {
+    "id": 41,
+    "company": "LABBOT, ANDREW M.",
+    "address": "138 TUDING, ITOGON, BENGUET",
+    "business": "LABBOT'S ELECTRICAL SERVICES",
+    "contact": "09184943111",
+    "prc": "RME"
+  },
+  {
+    "id": 42,
+    "company": "LACAY, GILBERT A.",
+    "address": "PUROK 8, ASIN ROAD, BAGUIO CITY",
+    "business": "GALAC'S ELECTRICAL SERVICES",
+    "contact": "09262555930",
+    "prc": "RME"
+  },
+  {
+    "id": 43,
+    "company": "LIWAN, LORENZO JR. G",
+    "address": "TOCMO, LOACAN, ITOGON, BENGUET",
+    "business": "LIWAN ELECTRICAL STUFFS AND SERVICES",
+    "contact": "09399227608",
+    "prc": "RME"
+  },
+  {
+    "id": 44,
+    "company": "LUNES, MARCELO S.",
+    "address": "CONOCON, DACLAN, TUBLAY",
+    "business": "VINCE-VENZI ELECTRICAL SERVICES",
+    "contact": "09565789437",
+    "prc": "REE"
+  },
+  {
+    "id": 45,
+    "company": "LUZANO, JOEL M.",
+    "address": "CAUCALAN, TALOY SUR, TUBA, BENGUET",
+    "business": "JAGS-L HARDWARE",
+    "contact": "09216811716",
+    "prc": "REE"
+  },
+  {
+    "id": 46,
+    "company": "MAMASPAS, DOMINGO N.",
+    "address": "59 CITY CAMP PROPER, BAGUIO CITY G/F ROOM 202, BAGUIO",
+    "business": "DNM ELECTRICAL WORKS AND SERVICES",
+    "contact": "09206581009 09163449099",
+    "prc": "RME"
+  },
+  {
+    "id": 47,
+    "company": "MARTIN, ROGER A.",
+    "address": "CONDOTEL, HARRISON ROAD, B. C.",
+    "business": "RAM ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09184558182",
+    "prc": "REE"
+  },
+  {
+    "id": 48,
+    "company": "MATIS, AMADO M.",
+    "address": "PA-10 UPPER WANGAL, LA TRINIDAD, BENGUET",
+    "business": "A.M. MATIS ENGINEERING & CONSTRUCTION",
+    "contact": "09189419833",
+    "prc": "REE"
+  },
+  {
+    "id": 49,
+    "company": "MUNAR, CHRISTHOPER JOHN I.",
+    "address": "AMBAYAO ROAD, PUROK 2, IRISAN, BAGUIO CITY",
+    "business": "CHRISTOPHER & JHUN ENGINEERING SERVICES",
+    "contact": "09995747460",
+    "prc": "REE"
+  },
+  {
+    "id": 50,
+    "company": "NGANHAYNA, LEONARD M.",
+    "address": "96 PUROK 4, BACBACAN, KM. 4, ASIN RD., BAGUIO CITY",
+    "business": "BOYET ELECTRICAL SERVICES",
+    "contact": "09616413059",
+    "prc": "RME"
+  },
+  {
+    "id": 51,
+    "company": "OXIMANA, JOHN B.",
+    "address": "FC026 BALILI, LA TRINIDAD",
+    "business": "OXIMANA ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09125648173",
+    "prc": "RME"
+  },
+  {
+    "id": 52,
+    "company": "PACUBAS, ADOR V.",
+    "address": "LEDESMA STREET, AURORA HILL, BAGUIO CITY",
+    "business": "AVP ELECTRICAL SERVICES",
+    "contact": "09063632017 09392581808",
+    "prc": "REE"
+  },
+  {
+    "id": 53,
+    "company": "PACYA, ARTHUR P.",
+    "address": "UPPER BANANGAN, SABLAN, BENGUET",
+    "business": "APP-WIRED ELECTRICAL SERVICES",
+    "contact": "09397887783",
+    "prc": "RME"
+  },
+  {
+    "id": 54,
+    "company": "PAREDES, AMOR",
+    "address": "CENTRAL BUYAGAN, LA TRINIDAD, BENGUET",
+    "business": "AMP ELECTRICAL SERVICES",
+    "contact": "09283814258 09773166596",
+    "prc": "REE"
+  },
+  {
+    "id": 55,
+    "company": "PASCUA, KENNETH S.",
+    "address": "72 PUROK 20 IDOGAN VILLAGE, BAGUIO CITY",
+    "business": "KENNETH PASCUA ELECTRICAL SERVICES",
+    "contact": "09219669671 09495021522",
+    "prc": "RME"
+  },
+  {
+    "id": 56,
+    "company": "PASIW-A, AGUSTO K.",
+    "address": "POYOPOY, TALOY SUR, TUBA, BENGUET",
+    "business": "AKP ELECTRICAL SERVICES",
+    "contact": "09187686441",
+    "prc": "RME"
+  },
+  {
+    "id": 57,
+    "company": "PASYALEN, GIDEON C.",
+    "address": "25 PUROK 23 MIDDLE SAN CARLOS HEIGHTS B.C.",
+    "business": "DEON'S ELECTRICAL SERVICES",
+    "contact": "09504572166 09152948486",
+    "prc": "RME"
+  },
+  {
+    "id": 58,
+    "company": "PATANGAN, BRUCE",
+    "address": "MAKAWAWAN, BALILI, MANKAYAN, BENGUET",
+    "business": "BRAVO PAPA ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09182316964",
+    "prc": "RME"
+  },
+  {
+    "id": 59,
+    "company": "PEREZ, ERNECIO L.",
+    "address": "ACOP, TUBLAY, BENGUET",
+    "business": "ELPEREZ ELECTRICAL SERVICES",
+    "contact": "09466170345",
+    "prc": "RME"
+  },
+  {
+    "id": 60,
+    "company": "QUINTO, MICHAEL N.",
+    "address": "276 CABINET HILL, BAGUIO CITY",
+    "business": "POWERSTRIKE ENGINEERING SERVICES",
+    "contact": "09171839428 09165714053",
+    "prc": "PEE"
+  },
+  {
+    "id": 61,
+    "company": "RESAYAGA, RYAN P.",
+    "address": "UPPER LIWANAG, LOAKAN, BAGUIO CITY",
+    "business": "REPSAJ ELECTRICAL SERVICES",
+    "contact": "09102582815 09175230069",
+    "prc": "RME"
+  },
+  {
+    "id": 62,
+    "company": "RODRIGUEZ, RAMILO A.",
+    "address": "LOT 99 BLK 1, MIDDLE QUIRINO HILL, B.C.",
+    "business": "RA RODRIGUEZ ELECT'L SERVICES",
+    "contact": "09177350460",
+    "prc": "RME"
+  },
+  {
+    "id": 63,
+    "company": "ROSARIO, ILDEFONSO JR.",
+    "address": "LOT 10, BLOCK 9, BBCCC SUBDV., GUITLEY RD. LUBAS, LA TRINIDAD, BENGUET",
+    "business": "ILR ELECTRICAL DESIGN AND SERVICES",
+    "contact": "09460209294",
+    "prc": "RME"
+  },
+  {
+    "id": 64,
+    "company": "SANO, JACKSON JR. E.",
+    "address": "1367 KEYMEN'S HILL, VIRAC, ITOGON, BENGUET",
+    "business": "SHAYAPI ELECTRICAL SERVICES",
+    "contact": "09989839858",
+    "prc": "RME"
+  },
+  {
+    "id": 65,
+    "company": "SICAT, BENJIE R.",
+    "address": "ABATAN, BUGUIAS, BENGUET",
+    "business": "BENJIE ELECTRICAL SERVICES AND SUPPLY",
+    "contact": "09075956900",
+    "prc": "RME"
+  },
+  {
+    "id": 66,
+    "company": "TACDERAS, RAYMOND E.",
+    "address": "UNIT 5, BASEMENT 2, BBCCC BLDG., ASSUMPTION ROAD",
+    "business": "TACDERAS ELECTRICAL AND PLUMBING SERVICES",
+    "contact": "09209029380",
+    "prc": "RME"
+  },
+  {
+    "id": 67,
+    "company": "TORRES, CELESTINO T.",
+    "address": "JC 364, PICO, KM. 5, LA TRINIDAD, BENGUET",
+    "business": "CJC ELECTRICAL SERVICES",
+    "contact": "09500756919",
+    "prc": "REE"
+  },
+  {
+    "id": 68,
+    "company": "UBALDO, RONALD R.",
+    "address": "FD 274A SIMPO BLDG., PINESPARK, BALILI, LA TRINIDAD, BENGUET",
+    "business": "R.R. UBALDO ELECTRICAL AND PLUMBING SERVICES",
+    "contact": "09670081862 09619628766",
+    "prc": "RME"
+  },
+  {
+    "id": 69,
+    "company": "VALDEZ, ARNEL T.",
+    "address": "51 PUROK 8, APUGAN, IRISAN, BAGUIO CITY",
+    "business": "ATV ELECTRICAL INSTALLATION SERVICES",
+    "contact": "09081444448",
+    "prc": "RME"
+  },
+  {
+    "id": 70,
+    "company": "VALDEZ, CESAR R.",
+    "address": "PUROK 9, BAKAKENG NORTE, B.C.",
+    "business": "CRV ELECT'L. WORKS & SERVICES",
+    "contact": "09193588753 09292017402",
+    "prc": "RME"
+  },
+  {
+    "id": 71,
+    "company": "VERCELES, RAYMUNDO D.",
+    "address": "CAMP 3, KENNON ROAD, TUBA, BENGUET",
+    "business": "BEAVER ELECTRICAL SERVICES",
+    "contact": "09983837317 09054320239",
+    "prc": "RME"
+  },
+  {
+    "id": 72,
+    "company": "VERGARA, ERNESTO E.",
+    "address": "143 INT. MANUEL ROXAS ST, TRANCOVILLE, B.C.",
+    "business": "E.E.V. ENGINEERING SERVICES",
+    "contact": "09179215553",
+    "prc": "RME"
+  },
+  {
+    "id": 73,
+    "company": "VICTORIANO, NEIL C.",
+    "address": "24 CALALILY CMPD. SANDIKO ST., BAGUIO CITY",
+    "business": "NCV ENGINEERING & ELECTRICAL SERVICES",
+    "contact": "09363150890 09677517953",
+    "prc": "RME"
+  },
+  {
+    "id": 74,
+    "company": "WANKEY, ARNOLD T.",
+    "address": "CENTRAL KAPANGAN, BENGUET",
+    "business": "ATW ELECTRICAL ENGINEERING SERVICES",
+    "contact": "09282757934",
+    "prc": "REE"
+  }
+]

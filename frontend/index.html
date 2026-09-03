@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#163c35" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="beneco-logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="beneco-logo.png" />
+  <title>BENECO — Barangay Feeder Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Festive&family=Iceland&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:    #1d4ed8;
+      --blue-dk: #163c35;
+      --accent:  #2563eb;
+      --gray-50: #f8fafc;
+      --gray-100:#f1f5f9;
+      --gray-200:#e2e8f0;
+      --gray-300:#cbd5e1;
+      --gray-400:#94a3b8;
+      --gray-600:#475569;
+      --gray-700:#334155;
+      --gray-900:#0f172a;
+      --radius:  8px;
+      --shadow:  rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      --shadow-md: rgba(0, 0, 0, 0.16) 0px 4px 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Elms Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      min-height: 100vh;
+    }
+
+    /* ── Sidenav ── */
+    .app-shell { display: flex; flex-direction: column; align-items: stretch; min-height: 100vh; }
+    .sidenav {
+      width: 100%; flex-shrink: 0;
+      background: var(--blue-dk);
+      position: relative; height: auto;
+      overflow: visible;
+      display: flex; flex-direction: row; flex-wrap: wrap;
+      box-shadow: 1px 0 4px rgba(0,0,0,.25);
+    }
+    .sidenav-brand {
+      display: flex; align-items: center; gap: 10px; color: #fff;
+      padding: 16px 16px; flex-shrink: 0;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .sidenav-toggle {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: calc(100% - 20px); min-height: 34px; margin: auto 10px 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 7px; background: rgba(255,255,255,.08); color: #fff;
+      font: 600 13px/1.2 "Elms Sans", sans-serif; cursor: pointer;
+      transition: background .15s, border-color .15s, transform .15s;
+    }
+    .sidenav-toggle:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.28); }
+    .sidenav-toggle:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
+    .sidenav-refresh {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 38px; margin: auto 10px 8px; padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,.2); border-radius: 7px;
+      background: rgba(255,255,255,.1); color: #fff;
+      font: 600 13px/1.2 "Elms Sans", sans-serif; cursor: pointer;
+      transition: background .15s, border-color .15s, opacity .15s;
+    }
+    .sidenav-refresh:hover { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.32); }
+    .sidenav-refresh:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
+    .sidenav-refresh:disabled { cursor: wait; opacity: .65; }
+    .sidenav-refresh svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+    .sidenav-refresh.is-loading svg { animation: refresh-spin .8s linear infinite; }
+    @keyframes refresh-spin { to { transform: rotate(360deg); } }
+    .nav-icon {
+      width: 36px; height: 36px; background: #fff; border-radius: 8px;
+      padding: 4px; display: grid; place-items: center; flex-shrink: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,.16);
+    }
+    .nav-icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .nav-title { font-family: "Elms Sans", sans-serif; font-size: 18px; font-weight: 750; letter-spacing: .015em; line-height: 1.05; }
+    .nav-sub   { margin-top: 3px; font-size: 10.5px; line-height: 1.2; opacity: .64; letter-spacing: .05em; }
+    .sidenav-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 10px; }
+    .sidenav-group + .sidenav-group { border-left: 1px solid rgba(255,255,255,.08); }
+    .sidenav-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em;
+      display: none; color: rgba(255,255,255,.38); padding: 2px 8px 8px;
+    }
+    .nav-tab {
+      display: block; width: auto; text-align: left;
+      color: rgba(255,255,255,.68); font-family: "Elms Sans", sans-serif; font-size: 15px; font-weight: 550; line-height: 1.2;
+      padding: 10px 12px; border-radius: 6px; cursor: pointer;
+      transition: background .12s, color .12s;
+      border: none; background: transparent; margin-bottom: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .nav-tab { display: flex; align-items: center; gap: 10px; }
+    .nav-item-icon { display: grid; place-items: center; width: 20px; height: 20px; flex: 0 0 20px; color: currentColor; }
+    .nav-item-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .toggle-icon { font-size: 18px; line-height: 1; }
+    .nav-tab:hover, .nav-tab.active { background: rgba(255,255,255,.12); color: #fff; }
+    .nav-ext-row { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+    .nav-ext-row .nav-tab { margin-bottom: 0; flex: 1; min-width: 0; }
+    .ext-open {
+      display: none;
+      flex-shrink: 0; width: 26px; height: 26px; place-items: center;
+      border-radius: 6px; color: rgba(255,255,255,.4); text-decoration: none; font-size: 12px;
+      transition: background .12s, color .12s;
+    }
+    .ext-open:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .sidenav-empty-hint { font-size: 11px; line-height: 1.5; color: rgba(255,255,255,.32); padding: 2px 8px; }
+    .sidenav.is-collapsed .sidenav-group { display: block; padding: 8px; }
+    .sidenav.is-collapsed .nav-brand-copy { display: none; }
+    .sidenav.is-collapsed .sidenav-brand { justify-content: center; padding: 16px 8px; }
+    .sidenav.is-collapsed .sidenav-toggle { width: 56px; min-height: 34px; margin: auto 8px 12px; }
+    .sidenav.is-collapsed .sidenav-refresh { width: 56px; min-height: 38px; margin: auto 8px 8px; padding: 9px; }
+    .sidenav.is-collapsed .toggle-label { display: none; }
+    .sidenav.is-collapsed .toggle-icon { transform: rotate(180deg); }
+    .sidenav.is-collapsed .nav-tab { justify-content: center; padding: 10px; }
+    .sidenav.is-collapsed .nav-label, .sidenav.is-collapsed .sidenav-label, .sidenav.is-collapsed .refresh-label { display: none; }
+
+    /* ── Layout ── */
+    .content-area { flex: 1; min-width: 0; background: linear-gradient(135deg, #f8fafc 0%, #f8fafc 72%, #f1f5f9 100%); }
+    .page { display: none; padding: 16px 14px 28px; }
+    .page.active { display: block; }
+    .page.page-frame { padding: 0; }
+    .page.page-frame.active { display: flex; }
+    .page-frame iframe { display: block; width: 100%; height: 100vh; border: 0; }
+
+    @media (min-width: 761px) {
+      .app-shell { flex-direction: row; align-items: flex-start; }
+      .sidenav { width: 226px; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto; flex-direction: column; flex-wrap: nowrap; }
+      .sidenav-brand { border-bottom: 1px solid rgba(255,255,255,.1); padding: 16px; }
+      .sidenav-group { display: block; padding: 12px 10px; }
+      .sidenav-group + .sidenav-group { border-left: 0; border-top: 1px solid rgba(255,255,255,.08); }
+      .sidenav-label { display: block; }
+      .nav-tab { width: 100%; }
+      .page { padding: 20px 24px 32px; }
+      .page-frame iframe { height: 100vh; }
+      .sidenav.is-collapsed { width: 72px; }
+      .sidenav.is-collapsed .sidenav-brand { min-height: 64px; }
+    }
+    @media (max-width: 760px) {
+      .sidenav-brand { border-bottom: none; padding: 10px 14px; }
+      .sidenav.is-collapsed .sidenav-group { display: flex; padding: 8px 10px; }
+      .sidenav.is-collapsed .nav-tab { width: auto; }
+    }
+
+    /* ── Stat cards ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 20px;
+    }
+    .stat-card {
+      --stat-accent: var(--accent);
+      position: relative; isolation: isolate; overflow: hidden;
+      background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+    .stat-card::before {
+      content: ""; position: absolute; z-index: 0; top: 0; right: 0;
+      width: 74px; height: 74px; background: var(--stat-accent);
+      clip-path: polygon(100% 0, 100% 100%, 0 0); opacity: .10;
+    }
+    .stat-card::after {
+      content: ""; position: absolute; top: 15px; right: 16px;
+      width: 9px; height: 9px; border: 2px solid var(--stat-accent);
+      border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px color-mix(in srgb, var(--stat-accent) 12%, transparent);
+    }
+    .stat-card > * { position: relative; z-index: 1; }
+    .stat-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--stat-accent) 38%, var(--gray-200)); box-shadow: var(--shadow-md); }
+    .stat-card.blue   { --stat-accent: #2563eb; }
+    .stat-card.green  { --stat-accent: #16a34a; }
+    .stat-card.purple { --stat-accent: #7c3aed; }
+    .stat-card.amber  { --stat-accent: #d97706; }
+    .stat-card.rose   { --stat-accent: #e11d48; }
+    .stat-card.teal   { --stat-accent: #0d9488; }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-400); margin-bottom: 6px; }
+    .stat-value { font-size: 31px; font-weight: 700; color: var(--gray-900); line-height: 1; }
+    .stat-sub   { font-size: 12px; color: var(--gray-400); margin-top: 5px; }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 14px; font-weight: 650; color: var(--gray-700);
+      margin-bottom: 10px; letter-spacing: .01em;
+    }
+
+    /* ── Grid layouts ── */
+    .grid-2, .grid-3 { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (min-width: 901px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+      transition: box-shadow .16s ease, border-color .16s ease;
+    }
+    .card:hover { border-color: var(--gray-300); box-shadow: var(--shadow-md); }
+    .card-head {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 13.5px; font-weight: 650; color: var(--gray-700);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-head::before {
+      content: ""; width: 8px; height: 8px; flex: 0 0 8px; margin-right: 10px;
+      border: 2px solid var(--accent); border-radius: 2px; transform: rotate(45deg);
+    }
+    .card-head[data-icon]::before {
+      content: attr(data-icon); width: 24px; height: 24px; flex-basis: 24px;
+      display: grid; place-items: center; margin-right: 9px; border: 0; border-radius: 6px;
+      background: color-mix(in srgb, var(--accent) 10%, white); color: var(--accent);
+      font-size: 13px; font-weight: 700; transform: none;
+    }
+    .card-head > * { min-width: 0; }
+    .head-copy { display: grid; gap: 2px; }
+    .head-title { font-size: inherit; font-weight: inherit; color: inherit; }
+    .head-desc { font-size: 11px; font-weight: 400; color: var(--gray-400); line-height: 1.35; }
+    .card-body { padding: 16px; }
+    .chart-wrap { position: relative; height: 240px; }
+    .chart-wrap-lg { position: relative; height: 300px; }
+    .feeder-type-layout { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .feeder-type-chart { flex: 0 0 180px; width: 180px; height: 180px; position: relative; }
+    .feeder-type-chart canvas { display: block; max-width: 100%; }
+    #pie-legend { flex: 1 1 130px; min-width: 120px; font-size: 12px; line-height: 1.9; }
+    @media (max-width: 480px) {
+      .feeder-type-layout { justify-content: center; }
+      .feeder-type-chart { flex-basis: 160px; width: 160px; height: 160px; }
+      #pie-legend { flex-basis: 100%; min-width: 0; text-align: center; }
+    }
+
+    /* ── Municipality pills ── */
+    .muni-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px;
+    }
+    .muni-card {
+      width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
+      border-radius: 6px; padding: 10px 12px;
+      border: 1px solid transparent;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .muni-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .muni-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .muni-name  { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+    .muni-count { font-size: 20px; font-weight: 700; }
+    .muni-bar-wrap { height: 3px; background: rgba(0,0,0,.08); border-radius: 2px; margin-top: 6px; }
+    .muni-bar  { height: 3px; border-radius: 2px; }
+    .muni-detail-backdrop[hidden] { display: none; }
+    .muni-detail-backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 18px; background: rgba(15,23,42,.38); backdrop-filter: blur(3px); }
+    .muni-detail-panel { position: relative; width: min(100%, 500px); padding: 24px; border: 1px solid var(--gray-200); border-radius: 10px; background: #fff; box-shadow: 0 18px 48px rgba(15,23,42,.18); }
+    .muni-detail-close { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border: 0; border-radius: 6px; background: var(--gray-100); color: var(--gray-600); font-size: 22px; line-height: 1; cursor: pointer; }
+    .muni-detail-close:hover { background: var(--gray-200); color: var(--gray-900); }
+    .muni-detail-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .muni-detail-kicker { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .muni-detail-title { margin-top: 5px; color: var(--gray-900); font-size: 24px; line-height: 1.1; }
+    .muni-detail-copy { margin-top: 7px; color: var(--gray-600); font-size: 13px; line-height: 1.45; }
+    .muni-detail-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 18px; }
+    .muni-detail-stat { padding: 12px; border: 1px solid var(--gray-200); border-radius: 7px; background: var(--gray-50); }
+    .muni-detail-stat strong { display: block; color: var(--gray-900); font-size: 21px; line-height: 1; }
+    .muni-detail-stat span { display: block; margin-top: 5px; color: var(--gray-600); font-size: 11px; }
+    .muni-detail-note { margin-top: 15px; color: var(--gray-400); font-size: 11px; line-height: 1.4; }
+    @media (max-width: 480px) { .muni-detail-panel { padding: 20px 16px; } .muni-detail-stats { grid-template-columns: 1fr 1fr; } }
+
+    /* ── Network ── */
+    .network-stage {
+      position: relative; height: 560px; overflow: hidden;
+      background: var(--gray-50); border-radius: 6px;
+    }
+    .network-stage::before {
+      content: ""; position: absolute; inset: -8%; z-index: 0;
+      opacity: .22; filter: blur(1.2px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 560' fill='none'%3E%3Cg stroke='%2394a3b8' stroke-width='1'%3E%3Cpath d='M-30 122C100 64 190 182 320 120s164-6 272-66 160-20 338 34'/%3E%3Cpath d='M-40 188c132-52 216 56 344 6s192-32 304-88 194-8 330 28'/%3E%3Cpath d='M-34 266c118-22 190 34 306-20s196-58 310-8 190 38 350-16'/%3E%3Cpath d='M-42 344c124-70 204 30 330-18s202-38 302 24 192 48 348-12'/%3E%3Cpath d='M-30 432c118-28 210 70 334 8s202-66 326-16 184 42 312-10'/%3E%3Cpath d='M138-24c28 86 2 154 72 222s62 148 32 362'/%3E%3Cpath d='M328-24c-14 98 32 150 0 238s-12 188 46 370'/%3E%3Cpath d='M536-20c-44 112 20 172 54 248s-30 196-8 356'/%3E%3Cpath d='M724-20c-18 104 48 178 24 260s-10 192 52 334'/%3E%3C/g%3E%3Cg stroke='%23cbd5e1' stroke-width='2' stroke-dasharray='7 9'%3E%3Cpath d='M-20 80L920 510'/%3E%3Cpath d='M80 580L880-18'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: cover; pointer-events: none;
+    }
+    #network-svg { position: relative; z-index: 1; display: block; width: 100%; height: 100%; background: transparent; border-radius: 6px; }
+    .node-feeder circle { stroke: #fff; stroke-width: 1.5; }
+    .node-muni  circle { stroke: #fff; stroke-width: 2; }
+    .node-label { font-size: 9px; fill: var(--gray-700); pointer-events: none; font-weight: 500; }
+    .link       { stroke: var(--gray-300); stroke-opacity: .6; }
+    .network-legend { display: flex; gap: 16px; padding: 8px 12px; font-size: 11px; color: var(--gray-600); align-items: center; border-top: 1px solid var(--gray-100); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+    /* ── Table ── */
+    .controls {
+      padding: 12px 16px; background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 180px; }
+    .search-wrap svg { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
+    input[type="search"] {
+      width: 100%; padding: 6px 8px 6px 28px;
+      border: 1px solid var(--gray-200); border-radius: 5px;
+      font-size: 12px; outline: none; background: #fff;
+      transition: border-color .15s;
+    }
+    input[type="search"]:focus { border-color: var(--accent); }
+    select {
+      padding: 6px 24px 6px 8px; border: 1px solid var(--gray-200); border-radius: 5px;
+      font-size: 12px; outline: none; background: #fff; appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 6px center;
+    }
+    select:focus { border-color: var(--accent); }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--gray-50); }
+    th {
+      padding: 8px 12px; text-align: left;
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-400);
+      border-bottom: 1px solid var(--gray-200);
+      cursor: pointer; user-select: none; white-space: nowrap;
+    }
+    th:hover { color: var(--blue); }
+    th .si { opacity: .4; margin-left: 3px; font-style: normal; }
+    th.asc  .si::after { content:"↑"; opacity:1; }
+    th.desc .si::after { content:"↓"; opacity:1; }
+    th:not(.asc):not(.desc) .si::after { content:"↕"; }
+    tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .1s; }
+    tbody tr:hover { background: var(--gray-50); }
+    td { padding: 7px 12px; vertical-align: middle; }
+    .col-id { width: 60px; color: var(--gray-400); font-size: 11px; }
+    .col-name { font-weight: 500; color: var(--gray-900); }
+    .feeder-list { display: flex; flex-wrap: wrap; gap: 3px; }
+    .ftag {
+      display: inline-block; padding: 1px 6px; border-radius: 3px;
+      font-size: 10px; font-weight: 500; font-variant-numeric: tabular-nums;
+    }
+    .tag-f { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .tag-c { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .tag-s { background: #fdf4ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+    .mbadge {
+      display: inline-block; padding: 2px 7px; border-radius: 20px;
+      font-size: 10px; font-weight: 500;
+    }
+    .no-results td { text-align: center; padding: 32px; color: var(--gray-400); }
+    .table-footer {
+      padding: 8px 12px; font-size: 11px; color: var(--gray-400);
+      border-top: 1px solid var(--gray-100); background: var(--gray-50);
+    }
+
+    /* tooltip */
+    .tooltip {
+      position: fixed; background: rgba(15,23,42,.92); color: #fff;
+      padding: 6px 10px; border-radius: 5px; font-size: 11px; line-height: 1.4;
+      pointer-events: none; z-index: 999; display: none; max-width: 220px;
+    }
+
+    /* ── Contractor Map ── */
+    .cmap-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) 340px;
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .cmap-layout { grid-template-columns: 1fr; } }
+    #cmap { height: 600px; width: 100%; background: #dfe9e4; border-radius: 6px 6px 0 0; }
+    .cmap-notice {
+      font-size: 11px; color: var(--gray-600);
+      background: #fff7ed; border: 1px solid #fed7aa; border-radius: 5px;
+      padding: 7px 10px; margin-bottom: 12px; line-height: 1.4;
+    }
+    .cmap-sidebar {
+      display: flex; flex-direction: column;
+      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+      overflow: hidden; max-height: 640px;
+    }
+    .cmap-toolbar {
+      padding: 14px; border-bottom: 1px solid var(--gray-100);
+      flex-shrink: 0;
+    }
+    .cmap-stat-row {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 10px;
+    }
+    .cmap-stat {
+      padding: 8px 10px; background: var(--gray-50); border-radius: 6px; text-align: center;
+    }
+    .cmap-stat strong { display: block; font-size: 20px; font-weight: 700; color: var(--gray-900); letter-spacing: -.02em; }
+    .cmap-stat span   { font-size: 10px; color: var(--gray-400); text-transform: uppercase; letter-spacing: .05em; }
+    .cmap-toolbar input, .cmap-toolbar select {
+      width: 100%; padding: 6px 8px; border: 1px solid var(--gray-200);
+      border-radius: 5px; font-size: 12px; outline: none; background: var(--gray-50);
+      transition: border-color .15s;
+    }
+    .cmap-toolbar input:focus, .cmap-toolbar select:focus { border-color: var(--accent); }
+    .cmap-toolbar .row { display: flex; gap: 6px; margin-top: 6px; }
+    .cmap-feeder-section {
+      padding: 10px 14px; border-bottom: 1px solid var(--gray-100);
+      flex-shrink: 0;
+    }
+    .cmap-feeder-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--gray-400);
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 6px;
+    }
+    .cmap-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .cchip {
+      border: 1px solid var(--gray-200); background: #fff;
+      border-radius: 20px; padding: 3px 8px;
+      font-size: 10px; font-weight: 500; cursor: pointer;
+      color: var(--gray-600); transition: background .12s, border-color .12s, color .12s;
+      font-variant-numeric: tabular-nums;
+    }
+    .cchip:hover { border-color: var(--accent); color: var(--accent); }
+    .cchip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .cmap-results { overflow-y: auto; padding: 4px 10px 12px; flex: 1; }
+    .cmap-group { margin: 8px 4px 0; }
+    .cmap-group-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 2px; border-bottom: 1px solid var(--gray-100);
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--accent);
+    }
+    .cmap-group-head span { color: var(--gray-400); font-weight: 400; text-transform: none; letter-spacing: 0; }
+    .cmap-person {
+      display: grid; grid-template-columns: 26px 1fr;
+      gap: 8px; padding: 8px 2px;
+      border-bottom: 1px solid var(--gray-100);
+      cursor: pointer; transition: background .1s;
+    }
+    .cmap-person:hover { background: var(--gray-50); }
+    .cmap-avatar {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: #dbeafe; color: var(--blue);
+      display: grid; place-items: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
+    }
+    .cmap-person b  { display: block; font-size: 12px; color: var(--gray-900); }
+    .cmap-person small { display: block; font-size: 10px; color: var(--gray-400); margin-top: 1px; line-height: 1.3; }
+    .cprc-tag {
+      display: inline-block; margin-top: 4px;
+      padding: 1px 5px; border-radius: 3px;
+      font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums;
+    }
+    .prc-REE { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .prc-RME { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .prc-PEE { background: #fdf4ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+    .cmap-empty { padding: 24px 10px; text-align: center; color: var(--gray-400); font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+<nav class="sidenav">
+  <div class="sidenav-brand">
+    <div class="nav-icon"><img src="beneco-logo.png" alt="BENECO official logo"></div>
+    <div class="nav-brand-copy">
+      <div class="nav-title">BENECO</div>
+      <div class="nav-sub">BENGUET ELECTRIC COOPERATIVE</div>
+    </div>
+  </div>
+  <div class="sidenav-group">
+    <div class="sidenav-label">Workspace</div>
+    <button class="nav-tab active" data-page="dashboard" title="Dashboard"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 13 9-9 9 9"/><path d="M5 11v9h14v-9"/><path d="M9 20v-6h6v6"/></svg></span><span class="nav-label">Dashboard</span></button>
+    <button class="nav-tab" data-page="sysdata" title="System Data"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 3-4 3 2 5-7"/></svg></span><span class="nav-label">System Data</span></button>
+    <button class="nav-tab" data-page="network" title="Network"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="12" cy="18" r="2"/><path d="m7.7 7.1 2.8 8.1M16.2 9.2l-2.8 7"/></svg></span><span class="nav-label">Network</span></button>
+    <button class="nav-tab" data-page="contractors" title="Contractors"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 11a3 3 0 1 0 0-6"/><path d="M17 14a5 5 0 0 1 4 6"/></svg></span><span class="nav-label">Contractors</span></button>
+    <button class="nav-tab" data-page="directory" title="Directory"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span><span class="nav-label">Directory</span></button>
+  </div>
+  <div class="sidenav-group" id="standalone-group">
+    <div class="sidenav-label">Standalone Pages</div>
+  </div>
+  <button class="sidenav-refresh" id="refresh-data" type="button" title="Load the newest archived BENECO data">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M6.1 9a7 7 0 0 1 11.5-2.6L20 9M4 15l2.4 2.6A7 7 0 0 0 17.9 15"/></svg>
+    <span class="refresh-label" aria-live="polite">Refresh data</span>
+  </button>
+  <button class="sidenav-toggle" id="sidenav-toggle" type="button" aria-label="Collapse navigation" aria-expanded="true" title="Collapse navigation"><span class="toggle-icon">‹</span></button>
+</nav>
+
+<div class="content-area">
+<div class="tooltip" id="tooltip"></div>
+
+<!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+
+  <div class="stat-grid">
+    <div class="stat-card blue">
+      <div class="stat-label">Total Barangays</div>
+      <div class="stat-value">267</div>
+      <div class="stat-sub">Across Benguet province</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Municipalities</div>
+      <div class="stat-value">14</div>
+      <div class="stat-sub">Service areas</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">Unique Feeders</div>
+      <div class="stat-value">25</div>
+      <div class="stat-sub">Distribution lines</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Multi-Feeder</div>
+      <div class="stat-value" id="stat-multi">—</div>
+      <div class="stat-sub">Served by 2+ feeders</div>
+    </div>
+    <div class="stat-card rose">
+      <div class="stat-label">Max Feeders</div>
+      <div class="stat-value" id="stat-maxf">—</div>
+      <div class="stat-sub" id="stat-maxf-sub">per barangay</div>
+    </div>
+    <div class="stat-card teal">
+      <div class="stat-label">Avg Feeders</div>
+      <div class="stat-value" id="stat-avg">—</div>
+      <div class="stat-sub">per barangay</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head" data-icon="⌂"><span class="head-copy"><span class="head-title">Barangays per Municipality</span><span class="head-desc">Coverage count by local service area</span></span></div>
+      <div class="card-body"><div class="chart-wrap-lg"><canvas id="chart-muni"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head" data-icon="↗"><span class="head-copy"><span class="head-title">Top 12 Feeders by Coverage</span><span class="head-desc">Feeders serving the most barangays</span></span></div>
+      <div class="card-body"><div class="chart-wrap-lg"><canvas id="chart-feeders"></canvas></div></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head" data-icon="◒"><span class="head-copy"><span class="head-title">Feeder Type Distribution</span><span class="head-desc">Share of primary and secondary lines</span></span></div>
+      <div class="card-body feeder-type-layout">
+        <div class="feeder-type-chart"><canvas id="chart-type-pie"></canvas></div>
+        <div id="pie-legend"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head" data-icon="⌁"><span class="head-copy"><span class="head-title">Feeders per Barangay Distribution</span><span class="head-desc">How many lines serve each barangay</span></span></div>
+      <div class="card-body"><div class="chart-wrap"><canvas id="chart-hist"></canvas></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head" data-icon="⌂"><span class="head-copy"><span class="head-title">Municipality Overview</span><span class="head-desc">A quick comparison of barangay coverage</span></span></div>
+    <div class="card-body">
+      <div class="muni-grid" id="muni-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════ SYSTEM DATA ═══════════════════════════════ -->
+<div class="page" id="page-sysdata">
+
+  <!-- ── Source badge ── -->
+  <div style="margin-bottom:14px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--gray-400)">
+    <span style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;padding:2px 8px;border-radius:20px;font-weight:600">Live data</span>
+    Sourced from <strong style="color:var(--gray-600)">beneco.com.ph</strong> · as of Dec 31 2025
+  </div>
+
+  <!-- ── KPI cards ── -->
+  <div class="stat-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+    <div class="stat-card blue">
+      <div class="stat-label">Total Members</div>
+      <div class="stat-value">149,567</div>
+      <div class="stat-sub">Member-Consumer-Owners</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Meter Connections</div>
+      <div class="stat-value">241,077</div>
+      <div class="stat-sub">Active accounts</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Total Assets</div>
+      <div class="stat-value" style="font-size:22px">₱4.594B</div>
+      <div class="stat-sub">As of Dec 31 2025</div>
+    </div>
+    <div class="stat-card rose">
+      <div class="stat-label">Gross Revenue</div>
+      <div class="stat-value" style="font-size:22px">₱2.464B</div>
+      <div class="stat-sub">Annual</div>
+    </div>
+    <div class="stat-card teal">
+      <div class="stat-label">Peak Demand</div>
+      <div class="stat-value" style="font-size:22px">107.86</div>
+      <div class="stat-sub">MW non-coincident peak</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">System Loss</div>
+      <div class="stat-value">8.63%</div>
+      <div class="stat-sub">Annual · max allowed 12%</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-label">Power Factor</div>
+      <div class="stat-value">98.76%</div>
+      <div class="stat-sub">System power factor</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Load Factor</div>
+      <div class="stat-value">72.35%</div>
+      <div class="stat-sub">System load factor</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Employees</div>
+      <div class="stat-value">259</div>
+      <div class="stat-sub">Regular staff</div>
+    </div>
+    <div class="stat-card rose">
+      <div class="stat-label">Barangays Served</div>
+      <div class="stat-value">269</div>
+      <div class="stat-sub">100% electrified since 2012</div>
+    </div>
+    <div class="stat-card teal">
+      <div class="stat-label">Streetlights</div>
+      <div class="stat-value">11,689</div>
+      <div class="stat-sub">7,800 Baguio · 3,889 Benguet</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">Districts</div>
+      <div class="stat-value">11</div>
+      <div class="stat-sub">6 Baguio · 5 Benguet</div>
+    </div>
+  </div>
+
+  <!-- ── Energy row ── -->
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-head" data-icon="↗">Annual Energy Purchased</div>
+      <div class="card-body" style="text-align:center;padding:20px 16px">
+        <div style="font-size:26px;font-weight:700;color:var(--gray-900)">627.4M</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:2px">kWh / year</div>
+        <div style="font-size:10px;color:var(--gray-400);margin-top:6px">627,397,922.58 kWh</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head" data-icon="↘">Annual Energy Sold</div>
+      <div class="card-body" style="text-align:center;padding:20px 16px">
+        <div style="font-size:26px;font-weight:700;color:var(--blue)">573.3M</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:2px">kWh / year</div>
+        <div style="font-size:10px;color:var(--gray-400);margin-top:6px">573,277,046.03 kWh</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head" data-icon="!">Annual System Loss (kWh)</div>
+      <div class="card-body" style="text-align:center;padding:20px 16px">
+        <div style="font-size:26px;font-weight:700;color:#e11d48">54.1M</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:2px">kWh lost / year</div>
+        <div style="font-size:10px;color:var(--gray-400);margin-top:6px">54,120,876.55 kWh · 8.63%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Charts row ── -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        Monthly System Loss %
+        <span style="font-size:10px;font-weight:400;color:var(--gray-400)">Jul 2025 – Jun 2026 · Max allowed: 12%</span>
+      </div>
+      <div class="card-body"><div class="chart-wrap-lg"><canvas id="chart-sysloss"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        Energy Purchased vs Sold
+        <span style="font-size:10px;font-weight:400;color:var(--gray-400)">million kWh / month</span>
+      </div>
+      <div class="card-body"><div class="chart-wrap-lg"><canvas id="chart-energy"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ── Rates & charges ── -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">Bill Components</div>
+      <div class="card-body" style="padding:0">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:var(--gray-50)">
+            <th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-100)">Charge</th>
+            <th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-100)">Rate / Note</th>
+          </tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Generation Charge</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Variable (monthly PDFs available)</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Transmission Charge</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Variable</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Distribution Charge</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Regulated by ERC</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">System Loss Charge</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">9% (ERC max 12%)</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Environmental Charge (UC-EC)</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">₱0.0025 / kWh</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Feed-in-Tariff Allowance</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Per ERC order</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Metering Charge</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Fixed monthly</td></tr>
+            <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Supply Charge</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Fixed monthly</td></tr>
+            <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Value Added Tax (VAT)</td><td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">12%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">Consumer Discounts & Subsidies</div>
+      <div class="card-body" style="padding:0">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:var(--gray-50)">
+            <th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-100)">Program</th>
+            <th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-100)">Details</th>
+          </tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--gray-100)">
+              <td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Lifeline Rate</td>
+              <td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Residential ≤ 45 kWh/month — sliding discount</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--gray-100)">
+              <td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Senior Citizen Discount</td>
+              <td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Max 5% · residential ≤ 100 kWh/month</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--gray-100)">
+              <td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Senior Citizen Institutions</td>
+              <td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">50% discount for accredited institutions</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--gray-100)">
+              <td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">UC-Missionary Electrification</td>
+              <td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">National subsidy for off-grid areas</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--gray-100)">
+              <td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">RFSC</td>
+              <td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Reinvestment Fund for Sustainable CAPEX</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">Stranded Costs (SCC/SCD)</td>
+              <td style="padding:8px 14px;font-size:12px;color:var(--gray-600)">Removed from bills per ERC order (2020)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Monthly detail table ── -->
+  <div class="card">
+    <div class="card-head">Monthly Energy Data — Jul 2025 to Jun 2026</div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:var(--gray-50)">
+            <th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-200)">Month</th>
+            <th style="padding:8px 14px;text-align:right;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-200)">Purchased (kWh)</th>
+            <th style="padding:8px 14px;text-align:right;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-200)">Sold (kWh)</th>
+            <th style="padding:8px 14px;text-align:right;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-200)">System Loss</th>
+            <th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-200)">vs Limit</th>
+          </tr>
+        </thead>
+        <tbody id="sysdata-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════ NETWORK ═══════════════════════════════ -->
+<div class="page" id="page-network">
+  <div class="card">
+    <div class="card-head">
+      Feeder–Municipality Network
+      <span style="font-size:11px;font-weight:400;color:var(--gray-400)">Nodes sized by connections · Drag to explore</span>
+    </div>
+    <div class="network-stage">
+      <svg id="network-svg"></svg>
+    </div>
+    <div class="network-legend">
+      <span><span class="legend-dot" style="background:#2563eb"></span>Feeder node</span>
+      <span><span class="legend-dot" style="background:#16a34a"></span>Municipality node</span>
+      <span style="color:var(--gray-400);font-size:10px">Link weight = number of shared barangays</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ CONTRACTORS ═══════════════════════════════ -->
+<div class="page" id="page-contractors">
+  <div class="cmap-notice">
+    Map points are approximate municipality-level placements derived from address text.
+    Use the address in each record for dispatch verification.
+  </div>
+  <div class="cmap-layout">
+    <!-- Map -->
+    <div class="card" style="overflow:hidden">
+      <div id="cmap"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="cmap-sidebar">
+      <div class="cmap-toolbar">
+        <div class="cmap-stat-row">
+          <div class="cmap-stat"><strong id="cm-total">—</strong><span>Shown</span></div>
+          <div class="cmap-stat"><strong id="cm-feeders">—</strong><span>Feeders</span></div>
+          <div class="cmap-stat"><strong id="cm-munis">—</strong><span>Municipalities</span></div>
+        </div>
+        <input id="cm-search" type="search" placeholder="Search contractor, business, address…" />
+        <div class="row" style="display:flex;gap:6px;margin-top:6px">
+          <select id="cm-prc" style="flex:1;padding:6px 8px;border:1px solid var(--gray-200);border-radius:5px;font-size:12px;outline:none;background:var(--gray-50)">
+            <option value="">All Licenses</option>
+            <option>REE</option>
+            <option>RME</option>
+            <option>PEE</option>
+          </select>
+        </div>
+      </div>
+      <div class="cmap-feeder-section">
+        <div class="cmap-feeder-label">
+          <span>Filter by Feeder</span>
+          <button id="cm-clear" class="cchip" type="button">Clear</button>
+        </div>
+        <div id="cm-chips" class="cmap-chips"></div>
+      </div>
+      <div id="cm-results" class="cmap-results"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ DIRECTORY ═══════════════════════════════ -->
+<div class="page" id="page-directory">
+  <div class="card">
+    <div class="controls">
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" id="search" placeholder="Search barangay, municipality, feeder…" autocomplete="off" />
+      </div>
+      <select id="filter-muni"><option value="">All Municipalities</option></select>
+      <select id="filter-feeder"><option value="">All Feeders</option></select>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th data-col="id">ID<i class="si"></i></th>
+            <th data-col="barangay">Barangay<i class="si"></i></th>
+            <th data-col="municipality">Municipality<i class="si"></i></th>
+            <th>Feeder(s)</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <div class="table-footer" id="table-footer"></div>
+  </div>
+</div>
+
+</div><!-- /content-area -->
+</div><!-- /app-shell -->
+
+<div class="muni-detail-backdrop" id="muni-detail" hidden role="dialog" aria-modal="true" aria-labelledby="muni-detail-title">
+  <section class="muni-detail-panel">
+    <button class="muni-detail-close" id="muni-detail-close" type="button" aria-label="Close municipality details">×</button>
+    <div class="muni-detail-kicker">Municipality profile</div>
+    <h2 class="muni-detail-title" id="muni-detail-title"></h2>
+    <p class="muni-detail-copy" id="muni-detail-copy"></p>
+    <div class="muni-detail-stats" id="muni-detail-stats"></div>
+    <p class="muni-detail-note">Statistics are calculated from the barangay-to-feeder records currently loaded in this dashboard.</p>
+  </section>
+</div>
+
+<script>
+/* ═══════════════════════ DATA ═══════════════════════ */
+async function fetchSnapshot(latestPath, fallbackPath) {
+  try {
+    const latest = await fetch(latestPath, { cache: "no-store" });
+    if (latest.ok) {
+      const records = await latest.json();
+      if (Array.isArray(records) && records.length > 0) return records;
+    }
+  } catch (_) {
+    // The static snapshot keeps local/offline use working when the API is unavailable.
+  }
+  const fallback = await fetch(fallbackPath, { cache: "no-store" });
+  if (!fallback.ok) throw new Error(`Could not load ${fallbackPath} (${fallback.status})`);
+  const records = await fallback.json();
+  if (!Array.isArray(records) || records.length === 0) throw new Error(`${fallbackPath} did not contain any records`);
+  return records;
+}
+
+async function initDashboard() {
+const RAW = await fetchSnapshot("api/barangay-feeders/latest", "data.json");
+
+/* ═══════════════════════ COMPUTED ═══════════════════════ */
+const muniColors = {
+  "BAGUIO CITY":  "#5f4b73","LA TRINIDAD":"#d59a3a","ITOGON":"#3f6b57",
+  "TUBA":         "#bc6f55","ATOK":"#8d6e4a","BOKOD":"#65727e",
+  "BUGUIAS":      "#9b4d52","KABAYAN":"#59636b","KAPANGAN":"#8b6650",
+  "KIBUNGAN":"#52745f","MANKAYAN":"#9b5864","SABLAN":"#6f765e",
+  "TUBLAY":"#75628b","BAKUN":"#996a4d",
+};
+const muniStyle = {
+  "BAGUIO CITY":  {bg:"#eff6ff",color:"#1d4ed8",border:"#bfdbfe"},
+  "LA TRINIDAD":  {bg:"#f0fdf4",color:"#15803d",border:"#bbf7d0"},
+  "ITOGON":       {bg:"#fdf4ff",color:"#7e22ce",border:"#e9d5ff"},
+  "TUBA":         {bg:"#fff7ed",color:"#c2410c",border:"#fed7aa"},
+  "ATOK":         {bg:"#fefce8",color:"#a16207",border:"#fef08a"},
+  "BOKOD":        {bg:"#f0fdfa",color:"#0f766e",border:"#99f6e4"},
+  "BUGUIAS":      {bg:"#fdf2f8",color:"#be185d",border:"#fbcfe8"},
+  "KABAYAN":      {bg:"#f8fafc",color:"#334155",border:"#cbd5e1"},
+  "KAPANGAN":     {bg:"#fefce8",color:"#854d0e",border:"#fde68a"},
+  "KIBUNGAN":     {bg:"#f0f9ff",color:"#0369a1",border:"#bae6fd"},
+  "MANKAYAN":     {bg:"#fff1f2",color:"#be123c",border:"#fecdd3"},
+  "SABLAN":       {bg:"#f7fee7",color:"#3f6212",border:"#d9f99d"},
+  "TUBLAY":       {bg:"#fdf4ff",color:"#6b21a8",border:"#f3e8ff"},
+  "BAKUN":        {bg:"#fff8f1",color:"#9a3412",border:"#fed7aa"},
+};
+
+const munis   = [...new Set(RAW.map(d => d.municipality))].sort();
+const allFeeders = [...new Set(RAW.flatMap(d => d.feeder.split(", ")))].sort();
+
+const muniCount = {};
+munis.forEach(m => muniCount[m] = RAW.filter(d => d.municipality === m).length);
+
+const feederCount = {};
+allFeeders.forEach(f => feederCount[f] = RAW.filter(d => d.feeder.split(", ").includes(f)).length);
+
+const fCounts = RAW.map(d => d.feeder.split(", ").length);
+const multiCount = fCounts.filter(n => n > 1).length;
+const maxF = Math.max(...fCounts);
+const maxFBrgy = RAW.filter(d => d.feeder.split(", ").length === maxF).map(d => d.barangay).join(", ");
+const avgF = (fCounts.reduce((a,b) => a+b,0) / fCounts.length).toFixed(1);
+
+document.getElementById("stat-multi").textContent = multiCount;
+document.getElementById("stat-maxf").textContent  = maxF;
+document.getElementById("stat-maxf-sub").textContent = maxFBrgy.length > 30 ? maxFBrgy.slice(0,27)+"…" : maxFBrgy;
+document.getElementById("stat-avg").textContent   = avgF;
+
+/* ═══════════════════════ CHART.JS ═══════════════════════ */
+Chart.defaults.font.family = '"Elms Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+Chart.defaults.font.size   = 12;
+Chart.defaults.color       = '#5f6f7a';
+
+// 1. Barangays per Municipality (horizontal bar)
+new Chart(document.getElementById("chart-muni"), {
+  type: "bar",
+  data: {
+    labels: munis,
+    datasets: [{
+      data: munis.map(m => muniCount[m]),
+      backgroundColor: munis.map(m => muniColors[m] + "cc"),
+      borderColor:     munis.map(m => muniColors[m]),
+      borderWidth: 1, borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: "y",
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ` ${ctx.raw} barangays`
+    }}},
+    scales: {
+      x: { grid: { color: "#f1f5f9" }, beginAtZero: true },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// 2. Top feeders bar
+const topFeeders = Object.entries(feederCount).sort((a,b) => b[1]-a[1]).slice(0,12);
+new Chart(document.getElementById("chart-feeders"), {
+  type: "bar",
+  data: {
+    labels: topFeeders.map(([f]) => f),
+    datasets: [{
+      data: topFeeders.map(([,n]) => n),
+      backgroundColor: topFeeders.map(([f]) =>
+        f.startsWith("CIRCUIT_") ? "#d59a3acc" : f.startsWith("FEEDER_") && /FEEDER_\d/.test(f) ? "#5f4b73cc" : "#65727ecc"
+      ),
+      borderWidth: 0, borderRadius: 3,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ` ${ctx.raw} barangays`
+    }}},
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 35 } },
+      y: { grid: { color: "#f1f5f9" }, beginAtZero: true }
+    }
+  }
+});
+
+// 3. Feeder type pie
+const typeF = RAW.flatMap(d => d.feeder.split(", "));
+const circuitCount  = typeF.filter(f => f.startsWith("CIRCUIT_")).length;
+const feederNumCount = typeF.filter(f => /^FEEDER_\d/.test(f)).length;
+const specialCount  = typeF.filter(f => !/^CIRCUIT_/.test(f) && !/^FEEDER_\d/.test(f)).length;
+
+new Chart(document.getElementById("chart-type-pie"), {
+  type: "doughnut",
+  data: {
+    labels: ["Numbered Feeders","Circuit Lines","Special Lines"],
+    datasets: [{
+      data: [feederNumCount, circuitCount, specialCount],
+      backgroundColor: ["#5f4b73","#d59a3a","#65727e"],
+      borderWidth: 2, borderColor: "#fff",
+    }]
+  },
+  options: {
+    responsive: false, cutout: "65%",
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ` ${ctx.label}: ${ctx.raw}`
+    }}}
+  }
+});
+document.getElementById("pie-legend").innerHTML = [
+  ["#5f4b73","Numbered Feeders",feederNumCount],
+  ["#d59a3a","Circuit Lines",circuitCount],
+  ["#65727e","Special Lines",specialCount],
+].map(([c,l,n]) => `<div><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${c};margin-right:6px;vertical-align:middle"></span>${l} <strong>${n}</strong></div>`).join("");
+
+// 4. Histogram: feeders per barangay
+const histBuckets = {};
+fCounts.forEach(n => { histBuckets[n] = (histBuckets[n]||0)+1; });
+const hKeys = Object.keys(histBuckets).map(Number).sort((a,b)=>a-b);
+new Chart(document.getElementById("chart-hist"), {
+  type: "bar",
+  data: {
+    labels: hKeys.map(k => `${k} feeder${k>1?"s":""}`),
+    datasets: [{
+      label: "Barangays",
+      data: hKeys.map(k => histBuckets[k]),
+      backgroundColor: "#5f4b73aa",
+      borderColor: "#5f4b73",
+      borderWidth: 1, borderRadius: 3,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ` ${ctx.raw} barangays`
+    }}},
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: "#f1f5f9" }, beginAtZero: true }
+    }
+  }
+});
+
+// 5. Municipality grid
+const maxMuni = Math.max(...munis.map(m => muniCount[m]));
+const muniGrid = document.getElementById("muni-grid");
+muniGrid.innerHTML = munis.map(m => {
+  const s = muniStyle[m] || {bg:"#f1f5f9",color:"#475569",border:"#cbd5e1"};
+  const pct = Math.round(muniCount[m] / maxMuni * 100);
+  return `<button class="muni-card" type="button" data-muni="${m}" aria-label="View statistics for ${m}" style="background:${s.bg};border-color:${s.border}">
+    <div class="muni-name" style="color:${s.color}">${m}</div>
+    <div class="muni-count" style="color:${s.color}">${muniCount[m]}</div>
+    <div class="muni-bar-wrap"><div class="muni-bar" style="width:${pct}%;background:${s.color}"></div></div>
+  </button>`;
+}).join("");
+
+const muniDetail = document.getElementById("muni-detail");
+const muniDetailTitle = document.getElementById("muni-detail-title");
+const muniDetailCopy = document.getElementById("muni-detail-copy");
+const muniDetailStats = document.getElementById("muni-detail-stats");
+const closeMuniDetail = () => { muniDetail.hidden = true; };
+document.getElementById("muni-detail-close").addEventListener("click", closeMuniDetail);
+muniDetail.addEventListener("click", e => { if (e.target === muniDetail) closeMuniDetail(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !muniDetail.hidden) closeMuniDetail(); });
+document.querySelectorAll("[data-muni]").forEach(card => card.addEventListener("click", () => {
+  const municipality = card.dataset.muni;
+  const records = RAW.filter(d => d.municipality === municipality);
+  const feederCounts = records.map(d => d.feeder.split(", ").length);
+  const feederSet = new Set(records.flatMap(d => d.feeder.split(", ")));
+  const multiFeeder = feederCounts.filter(n => n > 1).length;
+  const average = (feederCounts.reduce((sum, count) => sum + count, 0) / records.length).toFixed(1);
+  const maximum = Math.max(...feederCounts);
+  const share = (records.length / RAW.length * 100).toFixed(1);
+  muniDetailTitle.textContent = municipality;
+  muniDetailCopy.textContent = `${records.length} barangays represent ${share}% of the ${RAW.length}-barangay service area, connected across ${feederSet.size} unique feeders.`;
+  muniDetailStats.innerHTML = [
+    [records.length, "Barangays served"],
+    [feederSet.size, "Unique feeders"],
+    [average, "Average feeders / barangay"],
+    [maximum, "Maximum feeders / barangay"],
+    [multiFeeder, "Multi-feeder barangays"],
+    [`${share}%`, "Share of total coverage"],
+  ].map(([value, label]) => `<div class="muni-detail-stat"><strong>${value}</strong><span>${label}</span></div>`).join("");
+  muniDetail.hidden = false;
+  document.getElementById("muni-detail-close").focus();
+}));
+
+/* ═══════════════════════ D3 NETWORK ═══════════════════════ */
+function buildNetwork() {
+  const svg = d3.select("#network-svg");
+  const W = svg.node().clientWidth || 900;
+  const H = 560;
+
+  svg.selectAll("*").remove();
+
+  // Build nodes + links (feeder ↔ municipality)
+  const nodes = [];
+  const links = [];
+  const linkMap = {};
+
+  const feederNodes = {};
+  const muniNodes   = {};
+
+  allFeeders.forEach((f,i) => {
+    feederNodes[f] = { id: f, type: "feeder", count: feederCount[f] };
+    nodes.push(feederNodes[f]);
+  });
+  munis.forEach((m,i) => {
+    muniNodes[m] = { id: m, type: "muni", count: muniCount[m] };
+    nodes.push(muniNodes[m]);
+  });
+
+  RAW.forEach(d => {
+    d.feeder.split(", ").forEach(f => {
+      const key = `${f}||${d.municipality}`;
+      if (!linkMap[key]) linkMap[key] = { source: f, target: d.municipality, value: 0 };
+      linkMap[key].value++;
+    });
+  });
+  Object.values(linkMap).forEach(l => links.push(l));
+
+  const fSize = d3.scaleSqrt().domain([1, Math.max(...allFeeders.map(f=>feederCount[f]))]).range([5, 18]);
+  const mSize = d3.scaleSqrt().domain([1, Math.max(...munis.map(m=>muniCount[m]))]).range([10, 28]);
+  const lWidth = d3.scaleLinear().domain([1, d3.max(links, l=>l.value)]).range([0.5, 4]);
+
+  const tooltip = document.getElementById("tooltip");
+
+  const sim = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d => d.id).distance(d => 80 + d.value * 2))
+    .force("charge", d3.forceManyBody().strength(-200))
+    .force("center", d3.forceCenter(W/2, H/2))
+    .force("collision", d3.forceCollide(d => (d.type==="feeder" ? fSize(d.count) : mSize(d.count)) + 3));
+
+  const g = svg.append("g");
+
+  // zoom
+  svg.call(d3.zoom().scaleExtent([0.4, 3]).on("zoom", e => g.attr("transform", e.transform)));
+
+  const link = g.append("g").selectAll("line")
+    .data(links).join("line")
+    .attr("class","link")
+    .attr("stroke-width", d => lWidth(d.value));
+
+  const node = g.append("g").selectAll("g")
+    .data(nodes).join("g")
+    .attr("class", d => `node-${d.type}`)
+    .call(d3.drag()
+      .on("start", (e,d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on("drag",  (e,d) => { d.fx=e.x; d.fy=e.y; })
+      .on("end",   (e,d) => { if (!e.active) sim.alphaTarget(0); d.fx=null; d.fy=null; })
+    )
+    .on("mouseover", (e,d) => {
+      const lines = d.type === "feeder"
+        ? [`<strong>${d.id}</strong>`, `${d.count} barangays served`]
+        : [`<strong>${d.id}</strong>`, `${d.count} barangays`, `${[...new Set(RAW.filter(r=>r.municipality===d.id).flatMap(r=>r.feeder.split(", ")))].length} feeders`];
+      tooltip.style.display = "block";
+      tooltip.innerHTML = lines.join("<br>");
+    })
+    .on("mousemove", e => {
+      tooltip.style.left = (e.clientX + 12) + "px";
+      tooltip.style.top  = (e.clientY - 10) + "px";
+    })
+    .on("mouseout", () => { tooltip.style.display = "none"; });
+
+  node.append("circle")
+    .attr("r", d => d.type==="feeder" ? fSize(d.count) : mSize(d.count))
+    .attr("fill", d => {
+      if (d.type === "muni") return muniColors[d.id] || "#64748b";
+      if (d.id.startsWith("CIRCUIT_")) return "#d59a3a";
+      if (/^FEEDER_\d/.test(d.id)) return "#5f4b73";
+      return "#65727e";
+    })
+    .attr("opacity", 0.85);
+
+  node.append("text")
+    .attr("class","node-label")
+    .attr("text-anchor","middle")
+    .attr("dy","0.35em")
+    .attr("font-size", d => d.type==="muni" ? 9 : 7)
+    .attr("fill", "#fff")
+    .attr("font-weight", "600")
+    .text(d => {
+      if (d.type === "muni") return d.id.length > 10 ? d.id.split(" ")[0] : d.id;
+      return d.id.replace("FEEDER_","F").replace("CIRCUIT_","C");
+    });
+
+  sim.on("tick", () => {
+    link
+      .attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+    node.attr("transform", d => `translate(${d.x},${d.y})`);
+  });
+}
+
+/* ═══════════════════════ DIRECTORY TABLE ═══════════════════════ */
+let sortCol = "id", sortDir = 1;
+let filterMuni = "", filterFeeder = "", filterSearch = "";
+
+const muniSel   = document.getElementById("filter-muni");
+const feederSel = document.getElementById("filter-feeder");
+munis.forEach(m => { muniSel.appendChild(new Option(m, m)); });
+allFeeders.forEach(f => { feederSel.appendChild(new Option(f, f)); });
+
+function ftag(f) {
+  f = f.trim();
+  let cls = "tag-f";
+  if (f.startsWith("CIRCUIT_")) cls = "tag-c";
+  else if (!/^FEEDER_\d/.test(f)) cls = "tag-s";
+  return `<span class="ftag ${cls}">${f}</span>`;
+}
+function mbadge(m) {
+  const s = muniStyle[m] || {bg:"#f1f5f9",color:"#475569",border:"#cbd5e1"};
+  return `<span class="mbadge" style="background:${s.bg};color:${s.color};border:1px solid ${s.border}">${m}</span>`;
+}
+
+function renderTable() {
+  let data = RAW.filter(d => {
+    const q = filterSearch.toLowerCase();
+    if (q && !d.barangay.toLowerCase().includes(q) && !d.municipality.toLowerCase().includes(q) && !d.feeder.toLowerCase().includes(q)) return false;
+    if (filterMuni   && d.municipality !== filterMuni) return false;
+    if (filterFeeder && !d.feeder.split(", ").includes(filterFeeder)) return false;
+    return true;
+  }).sort((a,b) => {
+    let va, vb;
+    if      (sortCol==="id")           { va=a.barangayid;    vb=b.barangayid; }
+    else if (sortCol==="barangay")     { va=a.barangay;      vb=b.barangay; }
+    else                               { va=a.municipality;  vb=b.municipality; }
+    return typeof va==="string" ? va.localeCompare(vb)*sortDir : (va-vb)*sortDir;
+  });
+
+  const tbody = document.getElementById("table-body");
+  document.getElementById("table-footer").textContent =
+    `Showing ${data.length} of ${RAW.length} barangays`;
+
+  if (!data.length) {
+    tbody.innerHTML = `<tr class="no-results"><td colspan="4">No results match your filters.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(d => `<tr>
+    <td class="col-id">${d.barangayid}</td>
+    <td class="col-name">${d.barangay}</td>
+    <td>${mbadge(d.municipality)}</td>
+    <td><div class="feeder-list">${d.feeder.split(", ").map(ftag).join("")}</div></td>
+  </tr>`).join("");
+}
+
+document.querySelectorAll("th[data-col]").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    sortDir = sortCol===col ? -sortDir : 1;
+    sortCol = col;
+    document.querySelectorAll("th[data-col]").forEach(t => t.classList.remove("asc","desc"));
+    th.classList.add(sortDir===1?"asc":"desc");
+    renderTable();
+  });
+});
+document.querySelector('th[data-col="id"]').classList.add("asc");
+document.getElementById("search").addEventListener("input", e => { filterSearch=e.target.value; renderTable(); });
+document.getElementById("filter-muni").addEventListener("change", e => { filterMuni=e.target.value; renderTable(); });
+document.getElementById("filter-feeder").addEventListener("change", e => { filterFeeder=e.target.value; renderTable(); });
+renderTable();
+
+/* ═══════════════════════ CONTRACTOR MAP ═══════════════════════ */
+let cmapInit = false, cmapInstance = null, cmapMarkers = new Map();
+let cmapContractors = [], cmapActiveFeeder = "";
+
+const MUNI_CENTERS = {
+  "BAGUIO CITY": [16.4023,120.596], "LA TRINIDAD": [16.462,120.587],
+  "ITOGON":      [16.364,120.676],  "TUBA":        [16.322,120.561],
+  "TUBLAY":      [16.489,120.644],  "MANKAYAN":    [16.864,120.782],
+  "BUGUIAS":     [16.72,120.828],   "KAPANGAN":    [16.578,120.598],
+  "SABLAN":      [16.477,120.56],   "KABAYAN":     [16.62,120.82],
+  "BOKOD":       [16.49,120.70],    "ATOK":        [16.59,120.71],
+  "BAKUN":       [16.79,120.66],    "KIBUNGAN":    [16.70,120.66],
+};
+const MAP_COLORS = ['#5f4b73','#d59a3a','#65727e','#bc6f55','#3f6b57','#9b4d52',
+  '#8d6e4a','#75628b','#996a4d','#52745f','#6f765e','#9b5864','#59636b','#8b6650'];
+
+function cmNorm(s) { return String(s||"").toUpperCase().replace(/[^A-Z0-9]+/g," ").trim(); }
+
+function cmGetMuni(address) {
+  const u = cmNorm(address);
+  return Object.keys(MUNI_CENTERS).find(m => u.includes(cmNorm(m)))
+    || (u.includes("BAGUIO") || u.includes("B.C") ? "BAGUIO CITY" : "BAGUIO CITY");
+}
+
+function cmFeederFor(c) {
+  const a = cmNorm(c.address);
+  const hits = RAW.filter(b => a.includes(cmNorm(b.barangay)));
+  let list = [...new Set(hits.flatMap(b => b.feeder.split(", ").map(x => x.trim())))];
+  if (!list.length) {
+    const m = cmGetMuni(c.address);
+    list = [...new Set(RAW.filter(b => b.municipality === m).flatMap(b => b.feeder.split(", ").map(x => x.trim())))].slice(0,4);
+  }
+  return list.length ? list : ["UNASSIGNED"];
+}
+
+function cmPointFor(c) {
+  const base = MUNI_CENTERS[cmGetMuni(c.address)] || [16.42, 120.61];
+  const angle = (c.id * 2.399) % (Math.PI * 2);
+  const radius = 0.006 + (c.id % 7) * 0.0012;
+  return [base[0] + Math.sin(angle) * radius, base[1] + Math.cos(angle) * radius];
+}
+
+function cmColorFor(feeder) {
+  let h = 0; for (const ch of feeder) h = (h * 31 + ch.charCodeAt(0)) % MAP_COLORS.length;
+  return MAP_COLORS[h];
+}
+
+function cmRender() {
+  const q   = cmNorm(document.getElementById("cm-search").value);
+  const prc = document.getElementById("cm-prc").value;
+
+  const filtered = cmapContractors.filter(c =>
+    (!q   || cmNorm([c.company, c.business, c.address].join(" ")).includes(q)) &&
+    (!prc || c.prc === prc) &&
+    (!cmapActiveFeeder || c.feeders.includes(cmapActiveFeeder))
+  );
+
+  cmapMarkers.forEach(m => m.remove()); cmapMarkers = new Map();
+
+  filtered.forEach(c => {
+    const color = cmapActiveFeeder ? cmColorFor(cmapActiveFeeder) : cmColorFor(c.feeders[0]);
+    const marker = L.circleMarker(cmPointFor(c), {
+      radius: 7, fillColor: color, color: "#fff", weight: 2, fillOpacity: .9
+    }).bindPopup(`
+      <strong>${c.company.trim()}</strong><br>
+      <span style="color:#64748b;font-size:11px">${c.business}</span>
+      <hr style="border:0;border-top:1px solid #e2e8f0;margin:6px 0">
+      <b>Address</b><br>${c.address}<br>
+      <b>Contact</b><br>${c.contact.trim()}<br>
+      <b>License:</b> <span style="font-weight:600">${c.prc}</span>
+      &nbsp;·&nbsp;<b>Feeders:</b> ${c.feeders.join(", ")}
+    `);
+    marker.addTo(cmapInstance);
+    cmapMarkers.set(c.id, marker);
+  });
+
+  const feederSet = new Set(filtered.flatMap(c => c.feeders));
+  document.getElementById("cm-total").textContent   = filtered.length;
+  document.getElementById("cm-feeders").textContent = feederSet.size;
+  document.getElementById("cm-munis").textContent   = new Set(filtered.map(c => cmGetMuni(c.address))).size;
+
+  // Group by feeder
+  const grouped = {};
+  filtered.forEach(c => c.feeders.forEach(f => {
+    if (!grouped[f]) grouped[f] = [];
+    grouped[f].push(c);
+  }));
+
+  const keys = Object.keys(grouped).sort();
+  const resultsEl = document.getElementById("cm-results");
+  if (!keys.length) {
+    resultsEl.innerHTML = `<div class="cmap-empty">No contractors match these filters.</div>`;
+    return;
+  }
+
+  resultsEl.innerHTML = keys.map(f => `
+    <div class="cmap-group">
+      <div class="cmap-group-head">${f}<span>${grouped[f].length} contractor${grouped[f].length>1?"s":""}</span></div>
+      ${grouped[f].sort((a,b) => a.company.localeCompare(b.company)).map(c => `
+        <div class="cmap-person" data-id="${c.id}">
+          <div class="cmap-avatar">${c.company.trim().split(/[ ,]+/).slice(0,2).map(x=>x[0]).join("")}</div>
+          <div>
+            <b>${c.company.trim()}</b>
+            <small>${c.address}</small>
+            <span class="cprc-tag prc-${c.prc}">${c.prc}</span>
+          </div>
+        </div>`).join("")}
+    </div>`).join("");
+
+  document.querySelectorAll(".cmap-person").forEach(el => {
+    el.addEventListener("click", () => {
+      const m = cmapMarkers.get(Number(el.dataset.id));
+      if (m) { cmapInstance.setView(m.getLatLng(), 14); m.openPopup(); }
+    });
+  });
+}
+
+function initContractorMap() {
+  if (cmapInit) { cmapInstance.invalidateSize(); return; }
+  cmapInit = true;
+
+  cmapInstance = L.map("cmap", { zoomControl: false }).setView([16.42, 120.61], 10);
+  L.control.zoom({ position: "bottomright" }).addTo(cmapInstance);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors", maxZoom: 18
+  }).addTo(cmapInstance);
+
+  fetchSnapshot("api/contractors/latest", "contractors.json").then(data => {
+    cmapContractors = data.map(c => ({ ...c, feeders: cmFeederFor(c) }));
+
+    const feeders = [...new Set(cmapContractors.flatMap(c => c.feeders))].sort();
+    document.getElementById("cm-chips").innerHTML = feeders.map(f =>
+      `<button type="button" class="cchip" data-feeder="${f}">${f}</button>`
+    ).join("");
+
+    document.querySelectorAll("[data-feeder]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        cmapActiveFeeder = cmapActiveFeeder === btn.dataset.feeder ? "" : btn.dataset.feeder;
+        document.querySelectorAll("[data-feeder]").forEach(x =>
+          x.classList.toggle("active", x.dataset.feeder === cmapActiveFeeder)
+        );
+        cmRender();
+      });
+    });
+
+    document.getElementById("cm-search").addEventListener("input", cmRender);
+    document.getElementById("cm-prc").addEventListener("change", cmRender);
+    document.getElementById("cm-clear").addEventListener("click", () => {
+      cmapActiveFeeder = "";
+      document.querySelectorAll("[data-feeder]").forEach(x => x.classList.remove("active"));
+      cmRender();
+    });
+
+    cmRender();
+  }).catch(() => {
+    document.getElementById("cm-results").innerHTML =
+      `<div class="cmap-empty">Could not load contractor data from the API or local snapshot.</div>`;
+  });
+}
+
+/* ═══════════════════════ STANDALONE / EXTERNAL PAGES ═══════════════════════
+   Pages built in other terminals register here — one line each. The sidenav
+   entry, the "open in new tab" link, and the lazy-loaded iframe are all
+   generated automatically; nothing else in this file needs to change.
+   file paths are resolved relative to index.html (same folder). */
+const EXTERNAL_PAGES = [
+  { id: "contractor-map", label: "Contractor Map", file: "contractor-map.html" },
+  // { id: "your-page-id", label: "Nav Label", file: "your-file.html" },
+];
+
+function mountExternalPages() {
+  const group   = document.getElementById("standalone-group");
+  const content = document.querySelector(".content-area");
+
+  if (!EXTERNAL_PAGES.length) {
+    group.insertAdjacentHTML("beforeend",
+      `<div class="sidenav-empty-hint">No standalone pages registered yet — add one to EXTERNAL_PAGES.</div>`);
+    return;
+  }
+
+  EXTERNAL_PAGES.forEach(p => {
+    group.insertAdjacentHTML("beforeend", `
+      <div class="nav-ext-row">
+        <button class="nav-tab" data-page="ext-${p.id}" title="${p.label}"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5z"/><path d="M8 3v18M12 7h4M12 11h4M12 15h3"/></svg></span><span class="nav-label">${p.label}</span></button>
+        <a class="ext-open" href="${p.file}" target="_blank" rel="noopener" title="Open ${p.label} in a new tab">↗</a>
+      </div>`);
+    content.insertAdjacentHTML("beforeend", `
+      <div class="page page-frame" id="page-ext-${p.id}">
+        <iframe data-src="${p.file}" title="${p.label}"></iframe>
+      </div>`);
+  });
+}
+mountExternalPages();
+
+/* ═══════════════════════ SYSTEM DATA ═══════════════════════ */
+const MONTHLY = [
+  { month:"Jul 2025", purchased:50888064,  sold:47808144  },
+  { month:"Aug 2025", purchased:52297990,  sold:46658483  },
+  { month:"Sep 2025", purchased:53630214,  sold:48784753  },
+  { month:"Oct 2025", purchased:53035237,  sold:47906851  },
+  { month:"Nov 2025", purchased:52146228,  sold:48700260  },
+  { month:"Dec 2025", purchased:49214969,  sold:54893211  },
+  { month:"Jan 2026", purchased:50178174,  sold:54455031  },
+  { month:"Feb 2026", purchased:58029941,  sold:52686553  },
+  { month:"Mar 2026", purchased:51736013,  sold:48985161  },
+  { month:"Apr 2026", purchased:55559556,  sold:51112757  },
+  { month:"May 2026", purchased:55173649,  sold:50106151  },
+  { month:"Jun 2026", purchased:57488525,  sold:52522899  },
+];
+MONTHLY.forEach(d => {
+  d.loss = ((d.purchased - d.sold) / d.purchased * 100).toFixed(2);
+});
+
+// System Loss % line chart
+new Chart(document.getElementById("chart-sysloss"), {
+  type: "line",
+  data: {
+    labels: MONTHLY.map(d => d.month),
+    datasets: [
+      {
+        label: "System Loss %",
+        data: MONTHLY.map(d => parseFloat(d.loss)),
+        borderColor: "#bc6f55",
+        backgroundColor: "rgba(188,111,85,.10)",
+        fill: true,
+        tension: 0.35,
+        pointRadius: 4,
+        pointBackgroundColor: "#bc6f55",
+        borderWidth: 2,
+      },
+      {
+        label: "ERC Max Allowed (12%)",
+        data: MONTHLY.map(() => 12),
+        borderColor: "#d59a3a",
+        borderDash: [5,4],
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: false,
+      },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "bottom", labels: { font: { size: 11 }, padding: 12 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` } }
+    },
+    scales: {
+      y: {
+        min: 0, max: 15,
+        grid: { color: "#f1f5f9" },
+        ticks: { callback: v => v + "%" }
+      },
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// Energy grouped bar chart
+new Chart(document.getElementById("chart-energy"), {
+  type: "bar",
+  data: {
+    labels: MONTHLY.map(d => d.month),
+    datasets: [
+      {
+        label: "Purchased",
+        data: MONTHLY.map(d => +(d.purchased / 1e6).toFixed(2)),
+        backgroundColor: "#d59a3aaa",
+        borderColor: "#d59a3a",
+        borderWidth: 1,
+        borderRadius: 2,
+      },
+      {
+        label: "Sold",
+        data: MONTHLY.map(d => +(d.sold / 1e6).toFixed(2)),
+        backgroundColor: "#bc6f55aa",
+        borderColor: "#bc6f55",
+        borderWidth: 1,
+        borderRadius: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "bottom", labels: { font: { size: 11 }, padding: 12 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}M kWh` } }
+    },
+    scales: {
+      y: { grid: { color: "#f1f5f9" }, ticks: { callback: v => v + "M" } },
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// Monthly detail table
+const LIMIT = 12;
+document.getElementById("sysdata-table").innerHTML = MONTHLY.map(d => {
+  const pct = parseFloat(d.loss);
+  const color  = pct >= LIMIT ? "#9b4d52" : pct >= 9 ? "#d59a3a" : "#3f6b57";
+  const barPct = Math.min(pct / LIMIT * 100, 100).toFixed(0);
+  return `<tr style="border-bottom:1px solid var(--gray-100)">
+    <td style="padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-900)">${d.month}</td>
+    <td style="padding:8px 14px;font-size:12px;text-align:right;color:var(--gray-600);font-variant-numeric:tabular-nums">${d.purchased.toLocaleString()}</td>
+    <td style="padding:8px 14px;font-size:12px;text-align:right;color:var(--gray-600);font-variant-numeric:tabular-nums">${d.sold.toLocaleString()}</td>
+    <td style="padding:8px 14px;text-align:right">
+      <span style="font-size:12px;font-weight:600;color:${color}">${pct}%</span>
+    </td>
+    <td style="padding:8px 14px;min-width:100px">
+      <div style="background:var(--gray-100);border-radius:3px;height:6px">
+        <div style="width:${barPct}%;background:${color};height:6px;border-radius:3px;transition:width .3s"></div>
+      </div>
+    </td>
+  </tr>`;
+}).join("");
+
+/* ═══════════════════════ NAV TABS ═══════════════════════ */
+const sidenav = document.querySelector(".sidenav");
+const sidenavToggle = document.getElementById("sidenav-toggle");
+const refreshButton = document.getElementById("refresh-data");
+const refreshLabel = refreshButton.querySelector(".refresh-label");
+refreshButton.addEventListener("click", async () => {
+  refreshButton.disabled = true;
+  refreshButton.classList.add("is-loading");
+  refreshButton.setAttribute("aria-busy", "true");
+  refreshLabel.textContent = "Checking…";
+  try {
+    const responses = await Promise.all([
+      fetch("api/barangay-feeders/latest", { cache: "no-store" }),
+      fetch("api/contractors/latest", { cache: "no-store" })
+    ]);
+    if (responses.some(response => !response.ok)) throw new Error("latest snapshot request failed");
+    const datasets = await Promise.all(responses.map(response => response.json()));
+    if (datasets.some(records => !Array.isArray(records) || records.length === 0)) throw new Error("latest snapshot was empty");
+    refreshLabel.textContent = "Updated";
+    window.setTimeout(() => window.location.reload(), 350);
+  } catch (error) {
+    console.error("Could not refresh dashboard data", error);
+    refreshLabel.textContent = "Update unavailable";
+    window.setTimeout(() => {
+      refreshLabel.textContent = "Refresh data";
+      refreshButton.disabled = false;
+      refreshButton.classList.remove("is-loading");
+      refreshButton.removeAttribute("aria-busy");
+    }, 2200);
+  }
+});
+sidenavToggle.addEventListener("click", () => {
+  const collapsed = sidenav.classList.toggle("is-collapsed");
+  sidenavToggle.setAttribute("aria-expanded", String(!collapsed));
+  sidenavToggle.setAttribute("aria-label", collapsed ? "Expand navigation" : "Collapse navigation");
+  sidenavToggle.setAttribute("title", collapsed ? "Expand navigation" : "Collapse navigation");
+  sidenavToggle.querySelector(".toggle-icon").textContent = collapsed ? "›" : "‹";
+});
+
+document.querySelectorAll(".nav-tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    const key = btn.dataset.page;
+    const pg = document.getElementById(`page-${key}`);
+    pg.classList.add("active");
+    if (key === "network")     buildNetwork();
+    if (key === "contractors") initContractorMap();
+    if (key.startsWith("ext-")) {
+      const iframe = pg.querySelector("iframe");
+      if (iframe && !iframe.getAttribute("src")) iframe.src = iframe.dataset.src;
+    }
+  });
+});
+}
+
+initDashboard().catch(error => {
+  console.error("Could not initialize dashboard", error);
+  const contentArea = document.querySelector(".content-area");
+  if (contentArea) {
+    contentArea.innerHTML = `<section role="alert" style="margin:24px;padding:20px;border:1px solid #fecaca;border-radius:8px;background:#fff1f2;color:#9f1239"><strong>Dashboard data could not be loaded.</strong><br>Serve the frontend through a web server and confirm data.json is available.</section>`;
+  }
+});
+</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+  }
+</script>
+</body>
+</html>

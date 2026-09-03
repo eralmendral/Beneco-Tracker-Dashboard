@@ -1,0 +1,1604 @@
+[
+  {
+    "barangayid": 137,
+    "barangay": "West Quirino Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 136,
+    "barangay": "West Modern Site",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 135,
+    "barangay": "West Bayan Park",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 226,
+    "barangay": "Wangal",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_03A, FEEDER_10"
+  },
+  {
+    "barangayid": 176,
+    "barangay": "Virac",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_11, FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 134,
+    "barangay": "Victoria Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04"
+  },
+  {
+    "barangayid": 133,
+    "barangay": "Upper Rock Quarry",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_08"
+  },
+  {
+    "barangayid": 132,
+    "barangay": "Upper Quirino Magsaysay",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 131,
+    "barangay": "Upper Quezon Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04"
+  },
+  {
+    "barangayid": 130,
+    "barangay": "Upper Market Subdivision",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 129,
+    "barangay": "Upper Magsaysay",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 128,
+    "barangay": "Upper General Luna",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 127,
+    "barangay": "Upper Dagsian",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 175,
+    "barangay": "Ucab",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_01, FEEDER_11"
+  },
+  {
+    "barangayid": 259,
+    "barangay": "Twin Peaks",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 267,
+    "barangay": "Tuel",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03, FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 174,
+    "barangay": "Tuding",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_01, FEEDER_11"
+  },
+  {
+    "barangayid": 266,
+    "barangay": "Tublay Central",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 126,
+    "barangay": "Trancoville",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 8,
+    "barangay": "Topdac",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_01, CIRCUIT_02, CIRCUIT_03"
+  },
+  {
+    "barangayid": 173,
+    "barangay": "Tinongdan",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_01, FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 153,
+    "barangay": "Tikey",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 125,
+    "barangay": "Teodora Alonzo",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_07"
+  },
+  {
+    "barangayid": 189,
+    "barangay": "Tawangan",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 225,
+    "barangay": "Tawang",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 238,
+    "barangay": "Taneg",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_04, CIRCUIT_06"
+  },
+  {
+    "barangayid": 258,
+    "barangay": "Taloy Sur",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_03"
+  },
+  {
+    "barangayid": 257,
+    "barangay": "Taloy Norte",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_03"
+  },
+  {
+    "barangayid": 256,
+    "barangay": "Tadiangan",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_03, FEEDER_03A"
+  },
+  {
+    "barangayid": 237,
+    "barangay": "Tabio",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_04, CIRCUIT_05"
+  },
+  {
+    "barangayid": 255,
+    "barangay": "Tabaan Sur",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 254,
+    "barangay": "Tabaan Norte",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_03"
+  },
+  {
+    "barangayid": 204,
+    "barangay": "Taba-ao",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 236,
+    "barangay": "Suyoc",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_04, CIRCUIT_05"
+  },
+  {
+    "barangayid": 124,
+    "barangay": "Sto. Tomas School Area",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 123,
+    "barangay": "Sto. Tomas Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_03, FEEDER_08"
+  },
+  {
+    "barangayid": 122,
+    "barangay": "Sto. Rosario Valley",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 121,
+    "barangay": "Sto. Nino-Slaughter Compound",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_07"
+  },
+  {
+    "barangayid": 120,
+    "barangay": "Sta. Scholastica",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12"
+  },
+  {
+    "barangayid": 119,
+    "barangay": "St. Joseph Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_11, FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 118,
+    "barangay": "South Sanitary Camp",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 117,
+    "barangay": "South Drive",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 116,
+    "barangay": "South Central Aurora Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 108,
+    "barangay": "SLU-SVP Housing",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 143,
+    "barangay": "Sinacbat",
+    "municipality": "BAKUN",
+    "feeder": "CIRCUIT_07"
+  },
+  {
+    "barangayid": 224,
+    "barangay": "Shilan",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_02, FEEDER_09"
+  },
+  {
+    "barangayid": 115,
+    "barangay": "Session Road",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A, FEEDER_06"
+  },
+  {
+    "barangayid": 167,
+    "barangay": "Sebang",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 114,
+    "barangay": "Scout Barrio",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 235,
+    "barangay": "Sapid",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_05, CIRCUIT_07"
+  },
+  {
+    "barangayid": 113,
+    "barangay": "San Vicente",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08, FEEDER_12"
+  },
+  {
+    "barangayid": 112,
+    "barangay": "San Roque Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04"
+  },
+  {
+    "barangayid": 253,
+    "barangay": "San Pascual",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_03"
+  },
+  {
+    "barangayid": 111,
+    "barangay": "San Luis Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04"
+  },
+  {
+    "barangayid": 110,
+    "barangay": "San Antonio Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 109,
+    "barangay": "Salud Mitra",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 203,
+    "barangay": "Sagubo",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 210,
+    "barangay": "Sagpat",
+    "municipality": "KIBUNGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 107,
+    "barangay": "Rizal Monument",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07, FEEDER_08"
+  },
+  {
+    "barangayid": 106,
+    "barangay": "Quezon Hill Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 223,
+    "barangay": "Puguis",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_03A, FEEDER_04, FEEDER_10"
+  },
+  {
+    "barangayid": 202,
+    "barangay": "Pudong",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 105,
+    "barangay": "Pucsusan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11"
+  },
+  {
+    "barangayid": 201,
+    "barangay": "Pongayan",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 104,
+    "barangay": "Poliwes",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12"
+  },
+  {
+    "barangayid": 252,
+    "barangay": "Poblacion TB",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_03, FEEDER_08"
+  },
+  {
+    "barangayid": 246,
+    "barangay": "Poblacion SB",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_03A"
+  },
+  {
+    "barangayid": 234,
+    "barangay": "Poblacion MN",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_05"
+  },
+  {
+    "barangayid": 222,
+    "barangay": "Poblacion LT",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 188,
+    "barangay": "Poblacion KB",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 209,
+    "barangay": "Poblacion KB",
+    "municipality": "KIBUNGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 172,
+    "barangay": "Poblacion IT",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_11, FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 200,
+    "barangay": "Poblacion Central",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 166,
+    "barangay": "Poblacion BS",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04, CIRCUIT_06"
+  },
+  {
+    "barangayid": 142,
+    "barangay": "Poblacion BN",
+    "municipality": "BAKUN",
+    "feeder": "CIRCUIT_07"
+  },
+  {
+    "barangayid": 152,
+    "barangay": "Poblacion BD",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 7,
+    "barangay": "Poblacion AT",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 151,
+    "barangay": "Pito",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 103,
+    "barangay": "Pinsao Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 102,
+    "barangay": "Pinsao Pilot Project",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04"
+  },
+  {
+    "barangayid": 101,
+    "barangay": "Pinget",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 221,
+    "barangay": "Pico",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_03A, FEEDER_04, FEEDER_07, FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 100,
+    "barangay": "Phil-Am Compound",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_06, FEEDER_08"
+  },
+  {
+    "barangayid": 199,
+    "barangay": "Paykek",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 6,
+    "barangay": "Pasdong",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_02, CIRCUIT_03"
+  },
+  {
+    "barangayid": 245,
+    "barangay": "Pappa",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_03A, FEEDER_10"
+  },
+  {
+    "barangayid": 5,
+    "barangay": "Paoay",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_02, CIRCUIT_03"
+  },
+  {
+    "barangayid": 99,
+    "barangay": "Palma - Urbano",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 208,
+    "barangay": "Palina",
+    "municipality": "KIBUNGAN",
+    "feeder": "CIRCUIT_07"
+  },
+  {
+    "barangayid": 98,
+    "barangay": "Padre Zamora",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07, FEEDER_08"
+  },
+  {
+    "barangayid": 97,
+    "barangay": "Padre Burgos",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 187,
+    "barangay": "Pacso",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02, CIRCUIT_04"
+  },
+  {
+    "barangayid": 233,
+    "barangay": "Paco",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_05"
+  },
+  {
+    "barangayid": 96,
+    "barangay": "Pacdal",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_11"
+  },
+  {
+    "barangayid": 95,
+    "barangay": "Outlook Drive",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11"
+  },
+  {
+    "barangayid": 94,
+    "barangay": "North Sanitary Camp",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A, FEEDER_10"
+  },
+  {
+    "barangayid": 93,
+    "barangay": "North Central Aurora Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 92,
+    "barangay": "New Lucban",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 150,
+    "barangay": "Nawal",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 165,
+    "barangay": "Natubleng",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_02, CIRCUIT_04, CIRCUIT_06"
+  },
+  {
+    "barangayid": 251,
+    "barangay": "Nangalisan",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_03"
+  },
+  {
+    "barangayid": 4,
+    "barangay": "Naguey",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 82,
+    "barangay": "MRR Queen of Peace",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07, FEEDER_08"
+  },
+  {
+    "barangayid": 91,
+    "barangay": "Mines View Park",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11"
+  },
+  {
+    "barangayid": 90,
+    "barangay": "Military Cut-Off",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_06, FEEDER_07, FEEDER_12"
+  },
+  {
+    "barangayid": 89,
+    "barangay": "Middle Rock Quarry",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_08"
+  },
+  {
+    "barangayid": 88,
+    "barangay": "Middle Quirino Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07, FEEDER_10"
+  },
+  {
+    "barangayid": 87,
+    "barangay": "Middle Quezon Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04"
+  },
+  {
+    "barangayid": 86,
+    "barangay": "Marcoville",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_12"
+  },
+  {
+    "barangayid": 85,
+    "barangay": "Manuel A. Roxas",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 84,
+    "barangay": "Malcolm Square-Perfecto",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 83,
+    "barangay": "Magsaysay Private Road",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A, FEEDER_07"
+  },
+  {
+    "barangayid": 207,
+    "barangay": "Madaymen",
+    "municipality": "KIBUNGAN",
+    "feeder": "CIRCUIT_02, CIRCUIT_03"
+  },
+  {
+    "barangayid": 186,
+    "barangay": "Lusod",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 81,
+    "barangay": "Lucnab",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11"
+  },
+  {
+    "barangayid": 206,
+    "barangay": "Lubo",
+    "municipality": "KIBUNGAN",
+    "feeder": "CIRCUIT_02, CIRCUIT_03"
+  },
+  {
+    "barangayid": 220,
+    "barangay": "Lubas",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_05, FEEDER_09, FEEDER_10, FEEDER_11"
+  },
+  {
+    "barangayid": 80,
+    "barangay": "Lualhati Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11, FEEDER_14"
+  },
+  {
+    "barangayid": 79,
+    "barangay": "Lower Rock Quarry",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_08"
+  },
+  {
+    "barangayid": 78,
+    "barangay": "Lower Quirino Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 77,
+    "barangay": "Lower Magsaysay",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 76,
+    "barangay": "Lower Lourdes Subdivision",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_08"
+  },
+  {
+    "barangayid": 75,
+    "barangay": "Lower General Luna",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05A"
+  },
+  {
+    "barangayid": 74,
+    "barangay": "Lower Dagsian",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12"
+  },
+  {
+    "barangayid": 73,
+    "barangay": "Lourdes Subdivision Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04"
+  },
+  {
+    "barangayid": 72,
+    "barangay": "Lourdes Subdivision Extension",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 71,
+    "barangay": "Lopez Jaena",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 164,
+    "barangay": "Loo",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 70,
+    "barangay": "Loakan Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_14"
+  },
+  {
+    "barangayid": 69,
+    "barangay": "Loakan Apugan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_14"
+  },
+  {
+    "barangayid": 171,
+    "barangay": "Loacan",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_01, FEEDER_11, FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 68,
+    "barangay": "Liwanag-Loakan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_14"
+  },
+  {
+    "barangayid": 163,
+    "barangay": "Lengaoan",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04, CIRCUIT_06"
+  },
+  {
+    "barangayid": 67,
+    "barangay": "Legarda-Burnham-Kisad",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_06, FEEDER_07, FEEDER_08"
+  },
+  {
+    "barangayid": 198,
+    "barangay": "Labueg",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 66,
+    "barangay": "Kias",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_14, FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 65,
+    "barangay": "Kayang Extension",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07, FEEDER_08"
+  },
+  {
+    "barangayid": 64,
+    "barangay": "Kayang - Hilltop",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 149,
+    "barangay": "Karao",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 244,
+    "barangay": "Kamog",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_03A"
+  },
+  {
+    "barangayid": 63,
+    "barangay": "Kagitingan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 62,
+    "barangay": "Kabayanihan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 185,
+    "barangay": "Kabayan Barrio",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 61,
+    "barangay": "Irisan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_03, FEEDER_03A, FEEDER_04"
+  },
+  {
+    "barangayid": 60,
+    "barangay": "Imelda Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 59,
+    "barangay": "Imelda R. Marcos",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 58,
+    "barangay": "Honeymoon - Holy Ghost",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 57,
+    "barangay": "Holy Ghost Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 56,
+    "barangay": "Holy Ghost Extension",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 55,
+    "barangay": "Hillside",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12"
+  },
+  {
+    "barangayid": 54,
+    "barangay": "Harrison-Claudio Carantes",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 53,
+    "barangay": "Happy Homes-Lucban",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05A, FEEDER_07, FEEDER_10"
+  },
+  {
+    "barangayid": 52,
+    "barangay": "Happy Hallow",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11, FEEDER_14"
+  },
+  {
+    "barangayid": 184,
+    "barangay": "Gusaran",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 170,
+    "barangay": "Gumatdang",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_11, FEEDER_14"
+  },
+  {
+    "barangayid": 51,
+    "barangay": "Guisad Surong",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 50,
+    "barangay": "Guisad Central",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 232,
+    "barangay": "Guinaoang",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_04, CIRCUIT_05"
+  },
+  {
+    "barangayid": 49,
+    "barangay": "Greenwater Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 48,
+    "barangay": "Gibraltar",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11"
+  },
+  {
+    "barangayid": 47,
+    "barangay": "General Emilio F. Aguinaldo",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 197,
+    "barangay": "Gaswiling",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 141,
+    "barangay": "Gambang",
+    "municipality": "BAKUN",
+    "feeder": "CIRCUIT_04, CIRCUIT_06, CIRCUIT_07"
+  },
+  {
+    "barangayid": 196,
+    "barangay": "Gadang",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 46,
+    "barangay": "Gabriela Silang",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12"
+  },
+  {
+    "barangayid": 45,
+    "barangay": "Fort del Pilar",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 44,
+    "barangay": "Ferdinand",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 43,
+    "barangay": "Fairview",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 42,
+    "barangay": "Engineers Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_12"
+  },
+  {
+    "barangayid": 148,
+    "barangay": "Ekip",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 183,
+    "barangay": "Eddet",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 41,
+    "barangay": "East Quirino Hill",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07, FEEDER_10"
+  },
+  {
+    "barangayid": 40,
+    "barangay": "East Modern Site",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 39,
+    "barangay": "East Bayan Park",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 182,
+    "barangay": "Duacan",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 35,
+    "barangay": "DPS Compound",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_12"
+  },
+  {
+    "barangayid": 38,
+    "barangay": "Dontogan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_03, FEEDER_08"
+  },
+  {
+    "barangayid": 37,
+    "barangay": "Dominican Hill - Mirador",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_08"
+  },
+  {
+    "barangayid": 36,
+    "barangay": "Dizon Subdivision",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 195,
+    "barangay": "Datakan",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 169,
+    "barangay": "Dalupirip",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 140,
+    "barangay": "Dalipey",
+    "municipality": "BAKUN",
+    "feeder": "CIRCUIT_07"
+  },
+  {
+    "barangayid": 265,
+    "barangay": "Daclan Tublay",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 147,
+    "barangay": "Daclan BD",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 194,
+    "barangay": "Cuba",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 219,
+    "barangay": "Cruz",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09"
+  },
+  {
+    "barangayid": 34,
+    "barangay": "Cresencia Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 33,
+    "barangay": "Country Club Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_11, FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 231,
+    "barangay": "Colalo",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_05"
+  },
+  {
+    "barangayid": 32,
+    "barangay": "City Camp Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 31,
+    "barangay": "City Camp Central",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08"
+  },
+  {
+    "barangayid": 193,
+    "barangay": "Cayapes",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 3,
+    "barangay": "Cattubo",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_02, CIRCUIT_03"
+  },
+  {
+    "barangayid": 162,
+    "barangay": "Catlubong",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 264,
+    "barangay": "Caponga",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03, FEEDER_09"
+  },
+  {
+    "barangayid": 30,
+    "barangay": "Campo Filipino",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 29,
+    "barangay": "Camp Henry I. Allen",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07, FEEDER_08"
+  },
+  {
+    "barangayid": 28,
+    "barangay": "Camp 8",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_12"
+  },
+  {
+    "barangayid": 27,
+    "barangay": "Camp 7",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08, FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 250,
+    "barangay": "Camp 4",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_14, FEEDER_DALICNO"
+  },
+  {
+    "barangayid": 249,
+    "barangay": "Camp 3",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_DALICNO, FEEDER_TAPSAN"
+  },
+  {
+    "barangayid": 248,
+    "barangay": "Camp 1",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_DALICNO, FEEDER_LUELCO"
+  },
+  {
+    "barangayid": 26,
+    "barangay": "Camdas",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 2,
+    "barangay": "Caliking",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_01, CIRCUIT_03"
+  },
+  {
+    "barangayid": 161,
+    "barangay": "Calamagan",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 230,
+    "barangay": "Cabiten",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_05"
+  },
+  {
+    "barangayid": 25,
+    "barangay": "Cabinet Hill - Teachers Camp",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A, FEEDER_12, FEEDER_14"
+  },
+  {
+    "barangayid": 160,
+    "barangay": "Buyacaoan",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04, CIRCUIT_06"
+  },
+  {
+    "barangayid": 229,
+    "barangay": "Bulalacao",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_04, CIRCUIT_05"
+  },
+  {
+    "barangayid": 24,
+    "barangay": "Brookspoint",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 23,
+    "barangay": "Brookside",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 192,
+    "barangay": "Boklaoan",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 146,
+    "barangay": "Bobok-Bisal",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02, FEEDER_01"
+  },
+  {
+    "barangayid": 218,
+    "barangay": "Bineng",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_10"
+  },
+  {
+    "barangayid": 145,
+    "barangay": "Bila",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 17,
+    "barangay": "BGH Compound",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_06, FEEDER_08, FEEDER_12"
+  },
+  {
+    "barangayid": 217,
+    "barangay": "Betag",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 191,
+    "barangay": "Beleng-Belis",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 228,
+    "barangay": "Bedbed",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_05"
+  },
+  {
+    "barangayid": 216,
+    "barangay": "Beckel",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_01, FEEDER_09"
+  },
+  {
+    "barangayid": 22,
+    "barangay": "Bayan Park Village",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 243,
+    "barangay": "Bayabas",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_03, FEEDER_03A"
+  },
+  {
+    "barangayid": 181,
+    "barangay": "Batan",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 263,
+    "barangay": "Basil",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03, FEEDER_09"
+  },
+  {
+    "barangayid": 180,
+    "barangay": "Bashoy",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 159,
+    "barangay": "Bangao",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 242,
+    "barangay": "Banengbeng",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_10"
+  },
+  {
+    "barangayid": 241,
+    "barangay": "Banangan",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_03A, FEEDER_10"
+  },
+  {
+    "barangayid": 21,
+    "barangay": "Balsigan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_06, FEEDER_08"
+  },
+  {
+    "barangayid": 240,
+    "barangay": "Balluay",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 179,
+    "barangay": "Ballay",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 227,
+    "barangay": "Balili MN",
+    "municipality": "MANKAYAN",
+    "feeder": "CIRCUIT_04, CIRCUIT_05"
+  },
+  {
+    "barangayid": 215,
+    "barangay": "Balili LT",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 190,
+    "barangay": "Balakbak",
+    "municipality": "KAPANGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 20,
+    "barangay": "Bakakeng Norte/Sur",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_08, FEEDER_12"
+  },
+  {
+    "barangayid": 19,
+    "barangay": "Bakakeng Central",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_03, FEEDER_08"
+  },
+  {
+    "barangayid": 214,
+    "barangay": "Bahong",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09"
+  },
+  {
+    "barangayid": 139,
+    "barangay": "Bagu",
+    "municipality": "BAKUN",
+    "feeder": "CIRCUIT_07"
+  },
+  {
+    "barangayid": 18,
+    "barangay": "Bagong Lipunan",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_07"
+  },
+  {
+    "barangayid": 239,
+    "barangay": "Bagong",
+    "municipality": "SABLAN",
+    "feeder": "FEEDER_10"
+  },
+  {
+    "barangayid": 205,
+    "barangay": "Badeo",
+    "municipality": "KIBUNGAN",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 158,
+    "barangay": "Baculongan Sur",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 157,
+    "barangay": "Baculongan Norte",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 262,
+    "barangay": "Ba-ayan",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 10,
+    "barangay": "AZCKO",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_07"
+  },
+  {
+    "barangayid": 16,
+    "barangay": "Aurora Hill Proper",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 15,
+    "barangay": "Atok Trail",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_14"
+  },
+  {
+    "barangayid": 14,
+    "barangay": "Asin",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_03, FEEDER_04, FEEDER_08"
+  },
+  {
+    "barangayid": 247,
+    "barangay": "Ansagan",
+    "municipality": "TUBA",
+    "feeder": "FEEDER_DALICNO, FEEDER_TAPSAN"
+  },
+  {
+    "barangayid": 13,
+    "barangay": "Andres Bonifacio",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_04, FEEDER_07"
+  },
+  {
+    "barangayid": 178,
+    "barangay": "Anchokey",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 138,
+    "barangay": "Ampusongan",
+    "municipality": "BAKUN",
+    "feeder": "CIRCUIT_02, CIRCUIT_07"
+  },
+  {
+    "barangayid": 168,
+    "barangay": "Ampucao",
+    "municipality": "ITOGON",
+    "feeder": "FEEDER_DALICNO, FEEDER_TAPSAN"
+  },
+  {
+    "barangayid": 156,
+    "barangay": "Amlimay",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04"
+  },
+  {
+    "barangayid": 155,
+    "barangay": "Amgaleyguey",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_02, CIRCUIT_04, CIRCUIT_06, CIRCUIT_07"
+  },
+  {
+    "barangayid": 144,
+    "barangay": "Ambuklao",
+    "municipality": "BOKOD",
+    "feeder": "CIRCUIT_01, CIRCUIT_02, CIRCUIT_03, FEEDER_01"
+  },
+  {
+    "barangayid": 261,
+    "barangay": "Ambongdolan",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 213,
+    "barangay": "Ambiong LT",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_01, FEEDER_02, FEEDER_05, FEEDER_09, FEEDER_11"
+  },
+  {
+    "barangayid": 12,
+    "barangay": "Ambiong BC",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05"
+  },
+  {
+    "barangayid": 260,
+    "barangay": "Ambassador",
+    "municipality": "TUBLAY",
+    "feeder": "CIRCUIT_03"
+  },
+  {
+    "barangayid": 212,
+    "barangay": "Alno",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09"
+  },
+  {
+    "barangayid": 11,
+    "barangay": "Alfonso Tabora",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05A"
+  },
+  {
+    "barangayid": 211,
+    "barangay": "Alapang",
+    "municipality": "LA TRINIDAD",
+    "feeder": "FEEDER_09, FEEDER_10"
+  },
+  {
+    "barangayid": 177,
+    "barangay": "Adaoay",
+    "municipality": "KABAYAN",
+    "feeder": "CIRCUIT_02"
+  },
+  {
+    "barangayid": 1,
+    "barangay": "Abiang",
+    "municipality": "ATOK",
+    "feeder": "CIRCUIT_02, CIRCUIT_03"
+  },
+  {
+    "barangayid": 9,
+    "barangay": "ABCR",
+    "municipality": "BAGUIO CITY",
+    "feeder": "FEEDER_05, FEEDER_05A"
+  },
+  {
+    "barangayid": 154,
+    "barangay": "Abatan",
+    "municipality": "BUGUIAS",
+    "feeder": "CIRCUIT_04, CIRCUIT_06"
+  }
+]

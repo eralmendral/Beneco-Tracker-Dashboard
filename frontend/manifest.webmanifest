@@ -1,0 +1,16 @@
+{
+  "name": "BENECO Barangay Feeder Dashboard",
+  "short_name": "BENECO Dashboard",
+  "description": "Barangay, feeder, network, and system data for BENECO service areas.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f8fafc",
+  "theme_color": "#163c35",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

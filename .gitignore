@@ -1,0 +1,9 @@
+.vercel/
+.env
+server/.env
+.venv/
+__pycache__/
+*.py[cod]
+server/beneco-server
+server/*.exe
+.qa/
