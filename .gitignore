@@ -7,3 +7,5 @@ __pycache__/
 server/beneco-server
 server/*.exe
 .qa/
+.idea/
+test-results/
