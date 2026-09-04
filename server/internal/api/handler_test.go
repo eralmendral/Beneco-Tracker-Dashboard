@@ -170,7 +170,7 @@ func TestIngestFacebookComplaintExcerpt(t *testing.T) {
 	now := time.Date(2026, time.September, 3, 10, 0, 0, 0, time.UTC)
 	store := &fakeStore{facebookRun: model.ScrapeRun{ID: 44, Source: model.SourceFacebookReports, ScrapedAt: now}}
 	request := httptest.NewRequest(http.MethodPost, "/api/ingest", bytes.NewBufferString(
-		`{"source":"facebook_reports","records":[{"source_id":"comment-1","post_url":"https://www.facebook.com/benguetelectric/posts/123/","reported_at":"2026-09-03T02:00:00Z","location":" Camp 7 ","feeder":" FEEDER_12 ","comment_excerpt":" No power since this morning "}]}`))
+		`{"source":"facebook_reports","records":[{"source_id":"comment-1","post_url":"https://www.facebook.com/benguetelectric/posts/123/","reported_at":"2026-09-03T02:00:00Z","location":" Camp 7 ","feeder":" FEEDER_12 ","comment_excerpt":" The bill doubled this month ","category":"billing"}]}`))
 	request.Header.Set("Authorization", "Bearer test-token")
 	response := httptest.NewRecorder()
 
@@ -179,7 +179,7 @@ func TestIngestFacebookComplaintExcerpt(t *testing.T) {
 	if response.Code != http.StatusCreated {
 		t.Fatalf("status = %d, want %d; body = %s", response.Code, http.StatusCreated, response.Body.String())
 	}
-	if len(store.ingestedFacebook) != 1 || store.ingestedFacebook[0].CommentExcerpt != "No power since this morning" {
+	if len(store.ingestedFacebook) != 1 || store.ingestedFacebook[0].CommentExcerpt != "The bill doubled this month" || store.ingestedFacebook[0].Category != "billing" {
 		t.Fatalf("ingested Facebook reports = %#v", store.ingestedFacebook)
 	}
 }

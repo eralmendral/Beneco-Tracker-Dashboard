@@ -50,4 +50,5 @@ type FacebookReport struct {
 	Location       string    `json:"location"`
 	Feeder         string    `json:"feeder"`
 	CommentExcerpt string    `json:"comment_excerpt"`
+	Category       string    `json:"category"`
 }

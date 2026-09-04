@@ -1,14 +1,14 @@
 # BENECO Tracker Dashboard
 
 A static dashboard, scheduled BENECO data scraper, and Go/PostgreSQL history API.
-Barangay and contractor ingests create immutable snapshots. Interruption and matched
-Facebook records are deduplicated by public source identifier so recurring pulls grow
+Barangay and contractor ingests create immutable snapshots. Interruption and social-media
+complaint records are deduplicated by public source identifier so recurring pulls grow
 a durable reliability history without inflating event counts.
 
 ## Project layout
 
 - `frontend/` — static dashboard and last-known-good JSON snapshots.
-- `scripts/` — Python scraper for barangays, interruption events, the accredited-practitioner PDF, and privacy-minimized Facebook outage signals.
+- `scripts/` — Python scraper for barangays, interruption events, the accredited-practitioner PDF, and privacy-minimized Facebook complaints.
 - `server/` — Go API, PostgreSQL access, and embedded migrations.
 - `.github/workflows/scrape.yml` — daily and manually dispatched scrape job.
 - `compose.yaml` — DigitalOcean droplet deployment at
@@ -28,9 +28,12 @@ When the API is available, operators can use **Pull Data** in the sidebar and
 enter the configured ingest token to archive fresh feeder, contractor, unscheduled
 interruption, and social-media data in one action. The token is used for that request
 only and is not stored by the browser. The **Reliability** workspace ranks recurring
-feeder interruptions, maps affected municipalities, charts unscheduled interruption
-frequency, and shows anonymous public Facebook complaint excerpts with contact details
-removed.
+feeder interruptions, maps affected municipalities, and charts unscheduled interruption
+frequency. The dedicated **Customer Complaints** workspace analyzes the database archive
+with category and time charts, feeder/location coverage, hotspot summaries, and a
+searchable list of anonymous public Facebook complaints covering power interruptions,
+billing, service, and meter/connection concerns. Contact details are removed before
+database storage.
 
 To run the API, copy `server/.env.example` to `server/.env`, set a reachable
 PostgreSQL `DATABASE_URL` and a long random `INGEST_TOKEN`, then:

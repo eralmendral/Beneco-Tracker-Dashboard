@@ -49,7 +49,7 @@ func (s *Store) OutagesSince(ctx context.Context, since time.Time) ([]model.Outa
 
 func (s *Store) FacebookReportsSince(ctx context.Context, since time.Time) ([]model.FacebookReport, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT source_id, post_url, reported_at, COALESCE(location, ''), feeder, comment_excerpt
+		SELECT source_id, post_url, reported_at, COALESCE(location, ''), feeder, comment_excerpt, category
 		FROM facebook_reports
 		WHERE reported_at >= $1
 		ORDER BY reported_at DESC, source_id, feeder`, since)
@@ -61,7 +61,7 @@ func (s *Store) FacebookReportsSince(ctx context.Context, since time.Time) ([]mo
 	records := make([]model.FacebookReport, 0)
 	for rows.Next() {
 		var record model.FacebookReport
-		if err := rows.Scan(&record.SourceID, &record.PostURL, &record.ReportedAt, &record.Location, &record.Feeder, &record.CommentExcerpt); err != nil {
+		if err := rows.Scan(&record.SourceID, &record.PostURL, &record.ReportedAt, &record.Location, &record.Feeder, &record.CommentExcerpt, &record.Category); err != nil {
 			return nil, fmt.Errorf("scan Facebook report: %w", err)
 		}
 		records = append(records, record)

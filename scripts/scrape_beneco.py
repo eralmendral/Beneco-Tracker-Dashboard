@@ -29,6 +29,10 @@ OUTAGE_URL = "https://api.beneco.com.ph/wballoutages.php"
 FACEBOOK_PAGE_URL = "https://www.facebook.com/benguetelectric"
 FACEBOOK_GRAPH_URL = "https://graph.facebook.com"
 FACEBOOK_PAGE_ID = "793198510733155"
+FACEBOOK_PLUGIN_APP_ID = "776730922422337"
+FACEBOOK_PAGE_PLUGIN_URL = "https://www.facebook.com/plugins/page.php"
+FACEBOOK_POST_PLUGIN_URL = "https://www.facebook.com/plugins/post.php"
+FACEBOOK_TAB_RENDERER_URL = "https://www.facebook.com/platform/plugin/tab/renderer/"
 SOURCE_BARANGAYS = "barangay_feeders"
 SOURCE_CONTRACTORS = "contractors"
 SOURCE_OUTAGES = "outages"
@@ -38,11 +42,29 @@ MANILA_TIMEZONE = dt.timezone(dt.timedelta(hours=8))
 OUTAGE_COMPLAINT_PATTERN = re.compile(
     r"(?:"
     r"wala(?:ng|\s+pa(?:ng|\s+rin)?|\s+parin)?\s+(?:kuryente|ilaw)|"
+    r"awan(?:an|en)?(?:\s+(?:pay|met))?\s+(?:ti\s+)?(?:kuryente|kuriente)|"
     r"(?:kuryente|ilaw)\s+(?:wala|patay|off)|"
     r"brown\s*out|black\s*out|"
     r"no\s+(?:power|electricity)|power\s+(?:is\s+out|outage|interruption)|"
     r"unscheduled\s+(?:power\s+)?interruption"
     r")",
+    flags=re.IGNORECASE,
+)
+BILLING_COMPLAINT_PATTERN = re.compile(
+    r"(?:\bbill(?:ing)?\b|\bsingil\b|\bbayad\b|\bkilowatt\b|\bkwh\b|"
+    r"\btumaas\b|\bmataas\b|\bmahal\b|\banlaki\b|\bovercharg(?:e|ed)\b|"
+    r"\d{3,}\s*(?:plus|k)?\b.{0,50}\b(?:month|months|buwan)\b)",
+    flags=re.IGNORECASE,
+)
+METER_CONNECTION_COMPLAINT_PATTERN = re.compile(
+    r"(?:\bmeter\b|\breading\b|\breconnect(?:ion)?\b|\bdisconnect(?:ion|ed)?\b|"
+    r"\bnew\s+connection\b|\bservice\s+drop\b)",
+    flags=re.IGNORECASE,
+)
+SERVICE_COMPLAINT_PATTERN = re.compile(
+    r"(?:\bcomplain(?:t)?\b|\breklamo\b|\bno\s+response\b|\bnot\s+responding\b|"
+    r"\bwalang\s+sumasagot\b|\bwalang\s+action\b|\bhotline\b|"
+    r"\bcustomer\s+service\b|\bfollow[ -]?up\b|\bpending\b)",
     flags=re.IGNORECASE,
 )
 
@@ -222,8 +244,19 @@ def _normalize_location(value: str) -> str:
 
 def _report_location(text: str, barangays: list[dict[str, Any]]) -> str:
     compact = " ".join(text.split())
+    explicit = re.search(
+        r"\b(?:dito|ditoy|dtoy)\s+(?:sa\s+)?([A-Za-z0-9][^,.!?]{1,80})",
+        compact,
+        flags=re.IGNORECASE,
+    )
+    if explicit:
+        explicit_location = explicit.group(1).strip(" ,;:-")
+        return explicit_location.title() if explicit_location.islower() else explicit_location
+
     boundary = re.search(
-        r"\b(?:since|simula|mula|walang\s+kuryente|brownout|blackout|no\s+power|power\s+outage)\b",
+        r"\b(?:since|simula|mula|walang\s+kuryente|"
+        r"awan(?:an|en)?(?:\s+(?:pay|met))?\s+(?:ti\s+)?(?:kuryente|kuriente)|"
+        r"brownout|blackout|no\s+power|power\s+outage)\b",
         compact,
         flags=re.IGNORECASE,
     )
@@ -242,8 +275,17 @@ def _report_location(text: str, barangays: list[dict[str, Any]]) -> str:
     return max(matches, key=len, default="")
 
 
-def _is_outage_complaint(text: str) -> bool:
-    return OUTAGE_COMPLAINT_PATTERN.search(" ".join(text.split())) is not None
+def _complaint_category(text: str) -> str | None:
+    normalized = " ".join(text.split())
+    if OUTAGE_COMPLAINT_PATTERN.search(normalized):
+        return "outage"
+    if BILLING_COMPLAINT_PATTERN.search(normalized):
+        return "billing"
+    if METER_CONNECTION_COMPLAINT_PATTERN.search(normalized):
+        return "meter_connection"
+    if SERVICE_COMPLAINT_PATTERN.search(normalized):
+        return "service"
+    return None
 
 
 def _comment_excerpt(text: str, limit: int = 240) -> str:
@@ -315,7 +357,8 @@ def parse_facebook_reports(
             if not isinstance(comment, dict):
                 continue
             text = " ".join(str(comment.get("text") or "").split())
-            if not text or not _is_outage_complaint(text):
+            category = _complaint_category(text)
+            if not text or category is None:
                 continue
             source_id = str(comment.get("identifier") or "").strip()
             reported_text = str(comment.get("dateCreated") or "").strip()
@@ -337,8 +380,94 @@ def parse_facebook_reports(
                     "location": location,
                     "feeder": feeder,
                     "comment_excerpt": _comment_excerpt(text),
+                    "category": category,
                 })
     reports.sort(key=lambda record: (record["reported_at"], record["source_id"], record["feeder"]))
+    return reports
+
+
+def discover_facebook_timeline_post_urls(
+    session: requests.Session,
+    timeout: float,
+) -> list[str]:
+    """Discover recent post links exposed by Facebook's unauthenticated Page Plugin."""
+    plugin_params = {
+        "href": FACEBOOK_PAGE_URL,
+        "tabs": "timeline",
+        "width": 500,
+        "height": 1200,
+        "small_header": "false",
+        "adapt_container_width": "true",
+        "hide_cover": "false",
+        "show_facepile": "false",
+        "show_posts": "true",
+    }
+    plugin_response = session.get(FACEBOOK_PAGE_PLUGIN_URL, params=plugin_params, timeout=timeout)
+    plugin_response.raise_for_status()
+    token_match = re.search(
+        r'"LSD",\[\],\{"token":"([^"]+)',
+        plugin_response.text,
+    )
+    if not token_match:
+        raise ValueError("Facebook Page Plugin did not expose its public render token")
+
+    config = {
+        "app_id": FACEBOOK_PLUGIN_APP_ID,
+        "href": FACEBOOK_PAGE_URL,
+        "width": 500,
+        "height": 1200,
+        "has_cta": False,
+        "has_small_header": False,
+        "has_adapt_container_width": True,
+        "has_cover": True,
+        "has_posts": True,
+        "tabs": "timeline",
+        "can_personalize": False,
+        "is_xfbml": False,
+        "referer_uri": "",
+    }
+    renderer_response = session.get(
+        FACEBOOK_TAB_RENDERER_URL,
+        params={
+            "key": "timeline",
+            "config_json": json.dumps(config, separators=(",", ":")),
+            "fb_dtsg_ag": "",
+            "__user": "0",
+            "__a": "1",
+            "__req": "1",
+            "dpr": "1",
+            "lsd": token_match.group(1),
+        },
+        timeout=timeout,
+    )
+    renderer_response.raise_for_status()
+    decoded = html.unescape(renderer_response.text).replace(r"\/", "/")
+    matches = re.findall(
+        r"https://www\.facebook\.com/benguetelectric/(?:posts|videos)/[^\"?\\\s<]+",
+        decoded,
+        flags=re.IGNORECASE,
+    )
+    return list(dict.fromkeys(match.rstrip("/") for match in matches))[:10]
+
+
+def fetch_public_timeline_reports(
+    session: requests.Session,
+    outages: list[dict[str, Any]],
+    barangays: list[dict[str, Any]],
+    timeout: float,
+) -> list[dict[str, Any]]:
+    reports: list[dict[str, Any]] = []
+    for post_url in discover_facebook_timeline_post_urls(session, timeout):
+        try:
+            response = session.get(
+                FACEBOOK_POST_PLUGIN_URL,
+                params={"href": post_url, "show_text": "true", "width": 500},
+                timeout=timeout,
+            )
+            response.raise_for_status()
+            reports.extend(parse_facebook_reports(response.text, outages, barangays))
+        except (requests.RequestException, ValueError):
+            logging.warning("could not read a recent public BENECO Facebook post")
     return reports
 
 
@@ -361,7 +490,8 @@ def parse_graph_facebook_reports(
             if not isinstance(comment, dict):
                 continue
             text = " ".join(str(comment.get("message") or "").split())
-            if not text or not _is_outage_complaint(text):
+            category = _complaint_category(text)
+            if not text or category is None:
                 continue
             source_id = str(comment.get("id") or "").strip()
             try:
@@ -382,6 +512,7 @@ def parse_graph_facebook_reports(
                     "location": location,
                     "feeder": feeder,
                     "comment_excerpt": _comment_excerpt(text),
+                    "category": category,
                 })
     reports.sort(key=lambda record: (record["reported_at"], record["source_id"], record["feeder"]))
     return reports
@@ -452,6 +583,11 @@ def fetch_facebook_reports(
     except (requests.RequestException, ValueError):
         logging.warning("could not read BENECO's featured Facebook post")
 
+    try:
+        reports.extend(fetch_public_timeline_reports(session, outages, barangays, timeout))
+    except (requests.RequestException, ValueError, TypeError):
+        logging.warning("could not discover BENECO's recent public Facebook posts")
+
     access_token = os.getenv("FACEBOOK_ACCESS_TOKEN", "").strip()
     if access_token:
         try:
@@ -460,6 +596,11 @@ def fetch_facebook_reports(
             ))
         except (requests.RequestException, ValueError, TypeError):
             logging.warning("Facebook Pages API collection failed; using public embed data only")
+    else:
+        logging.info(
+            "FACEBOOK_ACCESS_TOKEN is not configured; Facebook collection is limited "
+            "to comments exposed by public embeds"
+        )
 
     unique = {
         (record["source_id"], record["feeder"]): record
@@ -620,7 +761,12 @@ def main() -> None:
     logging.info("scraped %d barangay feeder records", len(barangays))
     logging.info("scraped %d contractor records from %s", len(contractors), pdf_url)
     logging.info("scraped %d official interruption records", len(outages))
-    logging.info("matched %d privacy-minimized Facebook outage reports", len(facebook_reports))
+    unique_facebook_reports = len({record["source_id"] for record in facebook_reports})
+    logging.info(
+        "collected %d privacy-minimized Facebook complaints across %d feeder mappings",
+        unique_facebook_reports,
+        len(facebook_reports),
+    )
 
     write_json(args.output_dir / "data.json", barangays)
     write_json(args.output_dir / "contractors.json", contractors)

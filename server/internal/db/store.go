@@ -128,20 +128,31 @@ func (s *Store) IngestFacebookReports(ctx context.Context, records []model.Faceb
 	for _, record := range records {
 		_, err = tx.Exec(ctx, `
 			INSERT INTO facebook_reports (
-				scrape_run_id, source_id, post_url, reported_at, location, feeder, comment_excerpt
-			) VALUES ($1, $2, $3, $4, $5, $6, $7)
+				scrape_run_id, source_id, post_url, reported_at, location, feeder, comment_excerpt, category
+			) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			ON CONFLICT (source_id, feeder) DO UPDATE SET
 				scrape_run_id = EXCLUDED.scrape_run_id,
 				post_url = EXCLUDED.post_url,
 				reported_at = EXCLUDED.reported_at,
 				location = EXCLUDED.location,
 				comment_excerpt = EXCLUDED.comment_excerpt,
+				category = EXCLUDED.category,
 				last_seen_at = now()`,
 			run.ID, record.SourceID, record.PostURL, record.ReportedAt,
-			nullable(record.Location), record.Feeder, record.CommentExcerpt)
+			nullable(record.Location), record.Feeder, record.CommentExcerpt, record.Category)
 		if err != nil {
 			return model.ScrapeRun{}, fmt.Errorf("upsert Facebook report %s: %w", record.SourceID, err)
 		}
+	}
+	if _, err = tx.Exec(ctx, `
+		DELETE FROM facebook_reports AS unmapped
+		WHERE unmapped.feeder = 'UNMAPPED'
+		  AND EXISTS (
+			SELECT 1 FROM facebook_reports AS mapped
+			WHERE mapped.source_id = unmapped.source_id
+			  AND mapped.feeder <> 'UNMAPPED'
+		  )`); err != nil {
+		return model.ScrapeRun{}, fmt.Errorf("remove superseded unmapped Facebook reports: %w", err)
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return model.ScrapeRun{}, fmt.Errorf("commit Facebook report ingest: %w", err)

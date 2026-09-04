@@ -1,4 +1,4 @@
-const CACHE_NAME = "beneco-dashboard-v7";
+const CACHE_NAME = "beneco-dashboard-v9";
 const APP_SHELL = [
   "./",
   "index.html",

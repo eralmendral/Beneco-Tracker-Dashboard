@@ -110,6 +110,7 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .nav-tab { display: flex; align-items: center; gap: 10px; }
+    .nav-tab[data-page="complaints"] { font-size: 14px; }
     .nav-item-icon { display: grid; place-items: center; width: 20px; height: 20px; flex: 0 0 20px; color: currentColor; }
     .nav-item-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .nav-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
@@ -542,6 +543,32 @@
     }
     .social-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 7px; }
     .social-meta span { color: var(--gray-400); font-size: 10px; }
+    .complaint-analysis-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); gap: 16px; margin-bottom: 16px; }
+    .complaint-trend-chart { position: relative; height: 300px; }
+    .complaint-category-chart { position: relative; height: 240px; }
+    .complaint-toolbar { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+    .complaint-filters { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 8px; }
+    .complaint-filter { display: grid; gap: 4px; color: var(--gray-400); font-size: 9px; font-weight: 750; text-transform: uppercase; }
+    .complaint-filter select, .complaint-filter input { min-width: 170px; min-height: 34px; }
+    .complaint-filter input { padding: 7px 9px; border: 1px solid var(--gray-200); border-radius: 6px; background: #fff; color: var(--gray-800); font: 500 11px/1.2 "Elms Sans", sans-serif; text-transform: none; }
+    .complaint-filter input:focus { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 20%, transparent); outline-offset: 1px; }
+    .complaint-count { color: var(--gray-400); font-size: 10px; }
+    .complaint-category { display: inline-flex; padding: 2px 7px; border-radius: 20px; font-size: 9px; font-weight: 800; }
+    .complaint-outage { background: #fee2e2; color: #991b1b; }
+    .complaint-billing { background: #fef3c7; color: #92400e; }
+    .complaint-service { background: #dbeafe; color: #1e40af; }
+    .complaint-meter_connection { background: #ede9fe; color: #5b21b6; }
+    .complaint-more {
+      display: block; min-height: 36px; margin: 12px auto 0; padding: 7px 14px;
+      border: 1px solid var(--gray-300); border-radius: 6px; background: #fff;
+      color: var(--gray-700); font: 700 11px/1.2 "Elms Sans", sans-serif; cursor: pointer;
+    }
+    .complaint-more:hover { border-color: var(--accent); color: var(--accent); }
+    .complaint-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .complaint-more[hidden] { display: none; }
+    .complaint-hotspots { max-height: 275px; overflow: auto; }
+    .complaint-hotspots td { padding-top: 8px; padding-bottom: 8px; }
+    .complaint-hotspots .location-cell { min-width: 150px; }
     .frequency-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
     .frequency-kpi { padding: 10px; border: 1px solid var(--gray-100); border-radius: 7px; background: var(--gray-50); }
     .frequency-kpi span { display: block; color: var(--gray-400); font-size: 9px; font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
@@ -549,12 +576,15 @@
     .frequency-table { max-height: 232px; overflow: auto; }
     .reliability-note { color: var(--gray-600); font-size: 11px; line-height: 1.55; }
     .reliability-note strong { color: var(--gray-900); }
-    @media (max-width: 1020px) { .reliability-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1020px) { .reliability-grid, .complaint-analysis-grid { grid-template-columns: 1fr; } }
     @media (max-width: 620px) {
       .reliability-head { align-items: stretch; flex-direction: column; }
       .reliability-window { flex-basis: auto; }
       .reliability-chart, #reliability-map { height: 340px; }
       .frequency-chart { height: 250px; }
+      .complaint-trend-chart { height: 260px; }
+      .complaint-category-chart { height: 220px; }
+      .complaint-filters, .complaint-filter, .complaint-filter select, .complaint-filter input { width: 100%; }
       .social-signal { grid-template-columns: 1fr; }
       .social-signal a { justify-self: start; }
     }
@@ -575,6 +605,7 @@
     <div class="sidenav-label">Workspace</div>
     <button class="nav-tab active" data-page="dashboard" title="Dashboard"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 13 9-9 9 9"/><path d="M5 11v9h14v-9"/><path d="M9 20v-6h6v6"/></svg></span><span class="nav-label">Dashboard</span></button>
     <button class="nav-tab" data-page="reliability" title="Feeder Reliability"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 2.8 19h18.4z"/><path d="M12 9v4M12 17h.01"/></svg></span><span class="nav-label">Reliability</span></button>
+    <button class="nav-tab" data-page="complaints" title="Customer Complaints"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/><path d="M8 9h8M8 13h5"/></svg></span><span class="nav-label">Customer Complaints</span></button>
     <button class="nav-tab" data-page="sysdata" title="System Data"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 3-4 3 2 5-7"/></svg></span><span class="nav-label">System Data</span></button>
     <button class="nav-tab" data-page="network" title="Network"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="12" cy="18" r="2"/><path d="m7.7 7.1 2.8 8.1M16.2 9.2l-2.8 7"/></svg></span><span class="nav-label">Network</span></button>
     <button class="nav-tab" data-page="contractors" title="Contractors"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 11a3 3 0 1 0 0-6"/><path d="M17 14a5 5 0 0 1 4 6"/></svg></span><span class="nav-label">Contractors</span></button>
@@ -752,16 +783,104 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-head" data-icon="f"><span class="head-copy"><span class="head-title">Social Media comments &amp; customer complaints</span><span class="head-desc">Public outage-related excerpts from BENECO's Facebook posts; profile names and contact details are not retained</span></span></div>
-    <div class="card-body"><div class="social-signal-list" id="reliability-social"><div class="reliability-note">No public complaints loaded.</div></div></div>
-  </div>
-
   <div class="grid-2">
     <div class="card" style="grid-column:1/-1">
       <div class="card-head" data-icon="i"><span class="head-copy"><span class="head-title">How to read this view</span><span class="head-desc">Context for responsible interpretation</span></span></div>
       <div class="card-body reliability-note"><strong>The watch score is comparative.</strong> Each unscheduled event contributes 2 points, every 12 interrupted hours contributes 1 point, an ongoing event contributes 2 points, and a feeder-matched social complaint contributes 0.5 point. Scores are normalized to the highest observed feeder. Weather, vegetation, NGCP supply, and equipment faults may all affect the result. Social comments are customer reports, not verified outage records; use the linked source before making operational decisions.</div>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ CUSTOMER COMPLAINTS ═══════════════════════════════ -->
+<div class="page" id="page-complaints">
+  <div class="reliability-head">
+    <div>
+      <span class="reliability-kicker">Member-consumer voice</span>
+      <h1>Customer Complaints</h1>
+      <p>Explore privacy-minimized complaints collected from public comments on BENECO's Facebook posts. Trends show what customers report most often and where a feeder or location could be identified.</p>
+    </div>
+    <div class="reliability-window">
+      <label for="complaint-days">Analysis window</label>
+      <select id="complaint-days">
+        <option value="14">Last 14 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="90" selected>Last 90 days</option>
+        <option value="365">All archived (1 year)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="reliability-source">
+    <strong>Backend archive</strong>
+    <span>Pull Data adds newly discovered public complaints to PostgreSQL and safely ignores records already stored.</span>
+    <a href="https://www.facebook.com/benguetelectric" target="_blank" rel="noopener">Official BENECO Facebook page ↗</a>
+  </div>
+  <div class="reliability-state" id="complaint-state" role="status">Open this view to load the complaint archive.</div>
+
+  <div class="stat-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+    <div class="stat-card purple"><div class="stat-label">Stored Complaints</div><div class="stat-value" id="complaint-total">—</div><div class="stat-sub">Unique public comments</div></div>
+    <div class="stat-card rose"><div class="stat-label">Power Interruptions</div><div class="stat-value" id="complaint-outage-total">—</div><div class="stat-sub">Outage-related reports</div></div>
+    <div class="stat-card amber"><div class="stat-label">Billing Concerns</div><div class="stat-value" id="complaint-billing-total">—</div><div class="stat-sub">Bill and payment reports</div></div>
+    <div class="stat-card blue"><div class="stat-label">Other Concerns</div><div class="stat-value" id="complaint-other-total">—</div><div class="stat-sub">Service, meter, and connection</div></div>
+    <div class="stat-card green"><div class="stat-label">Feeder-Mapped</div><div class="stat-value" id="complaint-mapped">—</div><div class="stat-sub" id="complaint-mapped-detail">Of stored complaints</div></div>
+  </div>
+
+  <div class="complaint-analysis-grid">
+    <div class="card">
+      <div class="card-head" data-icon="↗"><span class="head-copy"><span class="head-title">Complaint volume over time</span><span class="head-desc">Color-coded daily or weekly reports by complaint category</span></span></div>
+      <div class="card-body"><div class="complaint-trend-chart"><canvas id="complaint-trend-chart" role="img" aria-label="Complaint volume over time by category"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head" data-icon="◒"><span class="head-copy"><span class="head-title">Category distribution</span><span class="head-desc">Share of unique complaints in the selected period</span></span></div>
+      <div class="card-body"><div class="complaint-category-chart"><canvas id="complaint-category-chart" role="img" aria-label="Customer complaint category distribution"></canvas></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head" data-icon="⌖"><span class="head-copy"><span class="head-title">Reported location and feeder analysis</span><span class="head-desc">Recurring locations inferred from comment text and their mapped distribution feeders</span></span></div>
+    <div class="reliability-table-wrap complaint-hotspots">
+      <table class="reliability-table">
+        <thead><tr><th>Reported location</th><th>Complaints</th><th>Top concern</th><th>Mapped feeder</th><th>Latest</th></tr></thead>
+        <tbody id="complaint-hotspots"><tr class="no-results"><td colspan="5">Loading complaint location analysis…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head" data-icon="f"><span class="head-copy"><span class="head-title">Social media comments</span><span class="head-desc">Search and filter anonymous public complaint excerpts stored by the backend</span></span></div>
+    <div class="card-body">
+      <div class="complaint-toolbar">
+        <div class="complaint-filters">
+          <label class="complaint-filter" for="complaint-query">Search complaints
+            <input id="complaint-query" type="search" placeholder="Location, feeder, or words" autocomplete="off">
+          </label>
+          <label class="complaint-filter" for="complaint-category">Complaint category
+            <select id="complaint-category">
+              <option value="all">All complaints</option>
+              <option value="outage">Power interruption</option>
+              <option value="billing">Billing</option>
+              <option value="service">Customer service</option>
+              <option value="meter_connection">Meter &amp; connection</option>
+            </select>
+          </label>
+          <label class="complaint-filter" for="complaint-mapping">Feeder mapping
+            <select id="complaint-mapping">
+              <option value="all">All mapping states</option>
+              <option value="mapped">Mapped to feeder</option>
+              <option value="unmapped">Not yet mapped</option>
+            </select>
+          </label>
+        </div>
+        <span class="complaint-count" id="complaint-list-count">Loading stored complaints…</span>
+      </div>
+      <div class="social-signal-list" id="complaint-list"><div class="reliability-note">No public complaints loaded.</div></div>
+      <button class="complaint-more" id="complaints-load-more" type="button" hidden>Show more complaints</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head" data-icon="i"><span class="head-copy"><span class="head-title">Analysis scope</span><span class="head-desc">Use complaint signals with appropriate context</span></span></div>
+    <div class="card-body reliability-note"><strong>These are customer-reported concerns, not verified service findings.</strong> One source comment counts once even when it maps to multiple feeders. Names and common contact details are not stored. Category, location, and feeder matches are inferred from public text and should be confirmed against the linked source before operational action.</div>
   </div>
 </div>
 
@@ -1075,7 +1194,7 @@
 <dialog class="scrape-dialog" id="scrape-dialog" aria-labelledby="scrape-dialog-title">
   <form class="scrape-form" id="scrape-form">
     <h2 class="scrape-title" id="scrape-dialog-title">Pull BENECO and social data</h2>
-    <p class="scrape-copy">This archives BENECO's feeder directory, accredited contractors, and unscheduled interruption feed. It also collects public outage complaints from BENECO's Facebook posts, storing only anonymous excerpts with contact details removed.</p>
+    <p class="scrape-copy">This archives BENECO's feeder directory, accredited contractors, and unscheduled interruption feed. It also collects public outage, billing, service, and meter/connection complaints from BENECO's Facebook posts, storing only anonymous excerpts with contact details removed.</p>
     <label class="scrape-field" for="scrape-token">
       Ingest token
       <input id="scrape-token" name="token" type="password" autocomplete="off" required />
@@ -1663,6 +1782,19 @@ let reliabilityFrequencyChart = null;
 let reliabilityMap = null;
 let reliabilityMapLayer = null;
 
+const COMPLAINT_CATEGORIES = [
+  { key: "outage", label: "Power interruption", color: "#b91c1c" },
+  { key: "billing", label: "Billing", color: "#d97706" },
+  { key: "service", label: "Customer service", color: "#2563eb" },
+  { key: "meter_connection", label: "Meter & connection", color: "#7c3aed" },
+];
+let complaintsLoaded = false;
+let complaintsLoading = false;
+let complaintReports = [];
+let complaintTrendChart = null;
+let complaintCategoryChart = null;
+let complaintLimit = 10;
+
 function relEscape(value) {
   return String(value ?? "").replace(/[&<>"']/g, character => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -1723,7 +1855,7 @@ function relRankings(events, reports) {
     );
   });
   reports.forEach(report => {
-    if (!report.feeder || report.feeder === "UNMAPPED") return;
+    if ((report.category || "outage") !== "outage" || !report.feeder || report.feeder === "UNMAPPED") return;
     const row = ensure(report.feeder);
     row.reports += 1;
     row.latest = Math.max(row.latest, Date.parse(report.reported_at) || 0);
@@ -1923,29 +2055,235 @@ function relRenderMap(events, rankings) {
   window.setTimeout(() => reliabilityMap.invalidateSize(), 0);
 }
 
-function relRenderSocial(reports) {
-  const social = document.getElementById("reliability-social");
-  if (!reports.length) {
-    social.innerHTML = `<div class="reliability-note">No outage-related public comment has been archived for this period. Pull Data checks BENECO's featured public post and, when a server-side Facebook access token is configured, recent page posts.</div>`;
-    return;
-  }
+function complaintCategory(category) {
+  return COMPLAINT_CATEGORIES.find(item => item.key === (category || "outage")) || {
+    key: "other", label: "Other", color: "#64748b",
+  };
+}
+
+function complaintGroupReports(reports) {
   const grouped = new Map();
   reports.forEach(report => {
-    if (!grouped.has(report.source_id)) grouped.set(report.source_id, {
-      ...report, feeders: new Set(),
-    });
-    if (report.feeder && report.feeder !== "UNMAPPED") grouped.get(report.source_id).feeders.add(report.feeder);
+    const sourceID = String(report.source_id || "");
+    if (!sourceID) return;
+    if (!grouped.has(sourceID)) grouped.set(sourceID, { ...report, feeders: new Set() });
+    const entry = grouped.get(sourceID);
+    if (report.feeder && report.feeder !== "UNMAPPED") entry.feeders.add(report.feeder);
+    if (!entry.location && report.location) entry.location = report.location;
   });
-  const comments = [...grouped.values()].sort((a, b) => Date.parse(b.reported_at) - Date.parse(a.reported_at));
-  social.innerHTML = comments.slice(0, 20).map(report => {
+  return [...grouped.values()].sort((a, b) => Date.parse(b.reported_at) - Date.parse(a.reported_at));
+}
+
+function complaintWindowReports() {
+  const days = Number(document.getElementById("complaint-days").value);
+  const cutoff = Date.now() - days * 86400000;
+  return complaintGroupReports(
+    complaintReports.filter(report => (Date.parse(report.reported_at) || 0) >= cutoff)
+  );
+}
+
+function complaintFilteredReports(reports) {
+  const selectedCategory = document.getElementById("complaint-category").value;
+  const selectedMapping = document.getElementById("complaint-mapping").value;
+  const query = document.getElementById("complaint-query").value.trim().toLocaleLowerCase();
+  return reports.filter(report => {
+    const category = report.category || "outage";
+    const mapped = report.feeders.size > 0;
+    if (selectedCategory !== "all" && category !== selectedCategory) return false;
+    if (selectedMapping === "mapped" && !mapped) return false;
+    if (selectedMapping === "unmapped" && mapped) return false;
+    if (!query) return true;
+    const searchable = [
+      report.location,
+      report.comment_excerpt,
+      complaintCategory(category).label,
+      ...[...report.feeders].map(relFeederName),
+    ].join(" ").toLocaleLowerCase();
+    return searchable.includes(query);
+  });
+}
+
+function renderComplaintTrend(reports) {
+  if (complaintTrendChart) complaintTrendChart.destroy();
+  const days = Number(document.getElementById("complaint-days").value);
+  const bucketDays = days <= 30 ? 1 : 7;
+  const bucketMs = bucketDays * 86400000;
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+  const start = new Date(end);
+  start.setDate(start.getDate() - days + 1);
+  start.setHours(0, 0, 0, 0);
+  const bucketCount = Math.ceil(days / bucketDays);
+  const buckets = Array.from({ length: bucketCount }, (_, index) => ({
+    start: start.getTime() + index * bucketMs,
+    counts: Object.fromEntries(COMPLAINT_CATEGORIES.map(category => [category.key, 0])),
+  }));
+  reports.forEach(report => {
+    const timestamp = Date.parse(report.reported_at);
+    const index = Math.floor((timestamp - start.getTime()) / bucketMs);
+    if (Number.isFinite(timestamp) && index >= 0 && index < buckets.length) {
+      const key = complaintCategory(report.category).key;
+      if (key in buckets[index].counts) buckets[index].counts[key] += 1;
+    }
+  });
+  complaintTrendChart = new Chart(document.getElementById("complaint-trend-chart"), {
+    type: "bar",
+    data: {
+      labels: buckets.map(bucket => new Date(bucket.start).toLocaleDateString(undefined, { month: "short", day: "numeric" })),
+      datasets: COMPLAINT_CATEGORIES.map(category => ({
+        label: category.label,
+        data: buckets.map(bucket => bucket.counts[category.key]),
+        backgroundColor: `${category.color}d9`,
+        borderWidth: 0,
+        borderRadius: 3,
+      })),
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 9, boxHeight: 9, font: { size: 9 } } } },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { autoSkip: true, maxTicksLimit: 12, font: { size: 9 } } },
+        y: { stacked: true, beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { precision: 0 } },
+      },
+    },
+  });
+}
+
+function renderComplaintCategories(reports) {
+  if (complaintCategoryChart) complaintCategoryChart.destroy();
+  const counts = COMPLAINT_CATEGORIES.map(category =>
+    reports.filter(report => (report.category || "outage") === category.key).length
+  );
+  const hasData = counts.some(Boolean);
+  complaintCategoryChart = new Chart(document.getElementById("complaint-category-chart"), {
+    type: "doughnut",
+    data: {
+      labels: hasData ? COMPLAINT_CATEGORIES.map(category => category.label) : ["No stored complaints"],
+      datasets: [{
+        data: hasData ? counts : [1],
+        backgroundColor: hasData ? COMPLAINT_CATEGORIES.map(category => category.color) : ["#e2e8f0"],
+        borderColor: "#fff", borderWidth: 2,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: "62%", animation: false,
+      plugins: {
+        legend: { position: "bottom", labels: { boxWidth: 9, boxHeight: 9, font: { size: 9 } } },
+        tooltip: { enabled: hasData },
+      },
+    },
+  });
+}
+
+function renderComplaintHotspots(reports) {
+  const groups = new Map();
+  reports.forEach(report => {
+    const location = report.location || "Location not identified";
+    const key = location.toLocaleLowerCase();
+    if (!groups.has(key)) groups.set(key, {
+      location, count: 0, categories: new Map(), feeders: new Set(), latest: 0,
+    });
+    const entry = groups.get(key);
+    const category = report.category || "outage";
+    entry.count += 1;
+    entry.categories.set(category, (entry.categories.get(category) || 0) + 1);
+    report.feeders.forEach(feeder => entry.feeders.add(feeder));
+    entry.latest = Math.max(entry.latest, Date.parse(report.reported_at) || 0);
+  });
+  const hotspots = [...groups.values()].sort((a, b) => {
+    if (a.location === "Location not identified") return 1;
+    if (b.location === "Location not identified") return -1;
+    return b.count - a.count || b.latest - a.latest;
+  });
+  document.getElementById("complaint-hotspots").innerHTML = hotspots.length ? hotspots.map(entry => {
+    const categoryKey = [...entry.categories.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const category = complaintCategory(categoryKey);
+    const feeders = entry.feeders.size
+      ? [...entry.feeders].map(relFeederName).join(", ") : "Not yet mapped";
+    return `<tr><td class="location-cell"><strong>${relEscape(entry.location)}</strong></td><td>${entry.count}</td><td><span class="complaint-category complaint-${relEscape(category.key)}">${relEscape(category.label)}</span></td><td>${relEscape(feeders)}</td><td>${entry.latest ? new Date(entry.latest).toLocaleDateString() : "—"}</td></tr>`;
+  }).join("") : `<tr class="no-results"><td colspan="5">No complaint locations are archived for this period.</td></tr>`;
+}
+
+function renderComplaintList(reports) {
+  const list = document.getElementById("complaint-list");
+  const count = document.getElementById("complaint-list-count");
+  const loadMore = document.getElementById("complaints-load-more");
+  const visible = reports.slice(0, complaintLimit);
+  count.textContent = `${visible.length} of ${reports.length} matching complaint${reports.length === 1 ? "" : "s"}`;
+  loadMore.hidden = visible.length >= reports.length;
+  if (!loadMore.hidden) {
+    const remaining = reports.length - visible.length;
+    loadMore.textContent = `Show ${Math.min(10, remaining)} more complaint${remaining === 1 ? "" : "s"}`;
+  }
+  if (!reports.length) {
+    list.innerHTML = `<div class="reliability-note">No stored complaint matches these filters. Clear the search or choose a different category, mapping state, or analysis window.</div>`;
+    return;
+  }
+  list.innerHTML = visible.map(report => {
     const suppliedURL = String(report.post_url || "");
     const url = /^https:\/\/(?:www\.)?facebook\.com\//i.test(suppliedURL)
       ? suppliedURL : "https://www.facebook.com/benguetelectric";
     const feederLabel = report.feeders.size
       ? [...report.feeders].map(relFeederName).join(", ") : "Feeder not yet mapped";
-    const excerpt = report.comment_excerpt || "Outage-related comment archived before excerpts were enabled.";
-    return `<div class="social-signal"><div><strong>${relEscape(report.location || "Location not identified")}</strong><div class="social-comment">“${relEscape(excerpt)}”</div><div class="social-meta"><span>${relEscape(feederLabel)}</span><span>${new Date(report.reported_at).toLocaleString()}</span><span>Anonymous public comment</span></div></div><a href="${relEscape(url)}" target="_blank" rel="noopener">View source ↗</a></div>`;
+    const excerpt = report.comment_excerpt || "Complaint archived before excerpts were enabled.";
+    const category = complaintCategory(report.category);
+    return `<div class="social-signal"><div><strong>${relEscape(report.location || "Location not identified")}</strong><div class="social-comment">“${relEscape(excerpt)}”</div><div class="social-meta"><span class="complaint-category complaint-${relEscape(category.key)}">${relEscape(category.label)}</span><span>${relEscape(feederLabel)}</span><span>${new Date(report.reported_at).toLocaleString()}</span><span>Anonymous public comment · contact details removed</span></div></div><a href="${relEscape(url)}" target="_blank" rel="noopener">View source ↗</a></div>`;
   }).join("");
+}
+
+function renderComplaints() {
+  const reports = complaintWindowReports();
+  const filtered = complaintFilteredReports(reports);
+  const countByCategory = category => reports.filter(report => (report.category || "outage") === category).length;
+  const mapped = reports.filter(report => report.feeders.size).length;
+  const other = reports.length - countByCategory("outage") - countByCategory("billing");
+
+  document.getElementById("complaint-total").textContent = reports.length.toLocaleString();
+  document.getElementById("complaint-outage-total").textContent = countByCategory("outage").toLocaleString();
+  document.getElementById("complaint-billing-total").textContent = countByCategory("billing").toLocaleString();
+  document.getElementById("complaint-other-total").textContent = other.toLocaleString();
+  document.getElementById("complaint-mapped").textContent = reports.length
+    ? `${Math.round(mapped / reports.length * 100)}%` : "0%";
+  document.getElementById("complaint-mapped-detail").textContent = `${mapped} of ${reports.length} linked to a feeder`;
+
+  const state = document.getElementById("complaint-state");
+  state.classList.remove("error");
+  state.textContent = reports.length
+    ? `${reports.length} stored public complaint${reports.length === 1 ? "" : "s"} in this period; ${mapped} mapped to a feeder and ${reports.length - mapped} awaiting a feeder match.`
+    : "No public complaints are archived for this period. Use Pull Data to check BENECO's latest available social posts.";
+
+  renderComplaintTrend(reports);
+  renderComplaintCategories(reports);
+  renderComplaintHotspots(reports);
+  renderComplaintList(filtered);
+}
+
+async function initComplaints() {
+  if (complaintsLoading) return;
+  if (complaintsLoaded) {
+    renderComplaints();
+    return;
+  }
+  complaintsLoading = true;
+  const state = document.getElementById("complaint-state");
+  state.classList.remove("error");
+  state.textContent = "Loading stored public complaints and dashboard analysis…";
+  try {
+    const response = await fetch("api/facebook-reports?days=365", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Complaint archive request failed (${response.status})`);
+    complaintReports = await response.json();
+    if (!Array.isArray(complaintReports)) throw new Error("Complaint API returned an unexpected response");
+    complaintsLoaded = true;
+    renderComplaints();
+  } catch (error) {
+    console.error("Could not load customer complaint data", error);
+    state.classList.add("error");
+    state.textContent = "Customer complaint data is unavailable. Confirm the backend is running, then use Pull Data to archive available social reports.";
+    document.getElementById("complaint-hotspots").innerHTML = `<tr class="no-results"><td colspan="5">Could not load backend complaint data.</td></tr>`;
+    document.getElementById("complaint-list").innerHTML = `<div class="reliability-note">Could not load the stored complaint archive.</div>`;
+  } finally {
+    complaintsLoading = false;
+  }
 }
 
 function renderReliability() {
@@ -1985,7 +2323,6 @@ function renderReliability() {
   relRenderChart(rankings);
   relRenderFrequency(events);
   relRenderMap(events, rankings);
-  relRenderSocial(reports);
 }
 
 async function initReliability() {
@@ -1997,7 +2334,7 @@ async function initReliability() {
   reliabilityLoading = true;
   const state = document.getElementById("reliability-state");
   state.classList.remove("error");
-  state.textContent = "Loading archived interruption and Facebook signal data…";
+  state.textContent = "Loading archived interruption and Facebook complaint data…";
   try {
     const [outageResponse, facebookResponse] = await Promise.all([
       fetch("api/outages?days=365", { cache: "no-store" }),
@@ -2023,6 +2360,31 @@ async function initReliability() {
 
 document.getElementById("reliability-days").addEventListener("change", () => {
   if (reliabilityLoaded) renderReliability();
+});
+
+document.getElementById("complaint-days").addEventListener("change", () => {
+  complaintLimit = 10;
+  if (complaintsLoaded) renderComplaints();
+});
+
+document.getElementById("complaint-category").addEventListener("change", () => {
+  complaintLimit = 10;
+  if (complaintsLoaded) renderComplaints();
+});
+
+document.getElementById("complaint-mapping").addEventListener("change", () => {
+  complaintLimit = 10;
+  if (complaintsLoaded) renderComplaints();
+});
+
+document.getElementById("complaint-query").addEventListener("input", () => {
+  complaintLimit = 10;
+  if (complaintsLoaded) renderComplaints();
+});
+
+document.getElementById("complaints-load-more").addEventListener("click", () => {
+  complaintLimit += 10;
+  renderComplaintList(complaintFilteredReports(complaintWindowReports()));
 });
 
 /* ═══════════════════════ STANDALONE / EXTERNAL PAGES ═══════════════════════
@@ -2309,6 +2671,7 @@ document.querySelectorAll(".nav-tab").forEach(btn => {
     pg.classList.add("active");
     if (key === "network")     buildNetwork();
     if (key === "reliability") initReliability();
+    if (key === "complaints")  initComplaints();
     if (key === "contractors") initContractorMap();
     if (key.startsWith("ext-")) {
       const iframe = pg.querySelector("iframe");

@@ -2,10 +2,13 @@
 
 `scrape_beneco.py` downloads the public barangay-to-feeder JSON and official BENECO
 interruption feed, discovers the current accredited electrical practitioners PDF,
-and parses its table by row and column coordinates. It also inspects the public
-Facebook post embedded by BENECO's own site for outage comments. When
-`FACEBOOK_ACCESS_TOKEN` is configured, the same pull uses Meta's Pages API to inspect
-up to 30 recent BENECO page posts and up to 300 comments per post.
+and parses its table by row and column coordinates. It also inspects BENECO's featured
+Facebook post plus recent posts exposed by Facebook's public Page Plugin. Recognized
+English, Tagalog, and common Ilocano power-interruption phrases, along with billing,
+customer-service, and meter/connection complaints, are stored. When
+`FACEBOOK_ACCESS_TOKEN` is configured, the same pull additionally uses
+Meta's Pages API to inspect up to 30 recent BENECO page posts and up to 300 comments
+per post.
 
 ## Setup and local use
 
@@ -29,16 +32,18 @@ To create immutable server snapshots, omit `--no-post` and set:
 - `INGEST_TOKEN` — bearer token matching the server configuration.
 - `FACEBOOK_ACCESS_TOKEN` — optional server-side Meta access token with permission
   to read the BENECO page's public posts and comments. Never expose this token in the
-  browser.
+  browser. Use a token issued through a Meta Developer app; do not store a personal
+  Facebook password or browser cookies in this project.
 
 The script fails instead of posting an empty required dataset. Facebook parsing is
 best-effort because public embed markup and API access may change. It retains the
 comment identifier, time, inferred location and feeder, source post URL, and an
 anonymous excerpt of at most 240 characters. Profile names are excluded and common
 phone numbers, email addresses, account-like numbers, links, and mentions are redacted.
-Complaints that cannot yet be mapped to a feeder are retained as `UNMAPPED` and do not
-affect feeder reliability scores. Logs include record counts so source-layout changes
-are visible in GitHub Actions.
+Complaints are categorized as `outage`, `billing`, `service`, or `meter_connection`.
+Those that cannot be mapped to a feeder are retained as `UNMAPPED`; only feeder-matched
+outage complaints affect reliability scores. Logs include record counts so
+source-layout changes are visible in GitHub Actions.
 
 ## Tests
 

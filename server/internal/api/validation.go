@@ -106,8 +106,16 @@ func validateFacebookReports(records []model.FacebookReport) error {
 		record.Location = strings.TrimSpace(record.Location)
 		record.Feeder = strings.TrimSpace(record.Feeder)
 		record.CommentExcerpt = strings.TrimSpace(record.CommentExcerpt)
+		record.Category = strings.TrimSpace(record.Category)
+		if record.Category == "" {
+			record.Category = "outage"
+		}
 		if record.SourceID == "" || record.PostURL == "" || record.Feeder == "" || record.ReportedAt.IsZero() {
 			return fmt.Errorf("records[%d] is missing a required field", i)
+		}
+		if record.Category != "outage" && record.Category != "billing" &&
+			record.Category != "service" && record.Category != "meter_connection" {
+			return fmt.Errorf("records[%d].category is invalid", i)
 		}
 		if tooLong(record.SourceID, 200) || tooLong(record.PostURL, 2000) ||
 			tooLong(record.Location, 500) || tooLong(record.Feeder, 100) ||
