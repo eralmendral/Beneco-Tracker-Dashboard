@@ -6,6 +6,7 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"sync/atomic"
 	"time"
 
@@ -27,6 +28,10 @@ type Store interface {
 	BarangayFeedersByRun(ctx context.Context, runID int64) ([]model.BarangayFeeder, error)
 	LatestContractors(ctx context.Context) ([]model.Contractor, error)
 	ContractorsByRun(ctx context.Context, runID int64) ([]model.Contractor, error)
+	IngestOutages(ctx context.Context, records []model.OutageEvent) (model.ScrapeRun, error)
+	IngestFacebookReports(ctx context.Context, records []model.FacebookReport) (model.ScrapeRun, error)
+	OutagesSince(ctx context.Context, since time.Time) ([]model.OutageEvent, error)
+	FacebookReportsSince(ctx context.Context, since time.Time) ([]model.FacebookReport, error)
 }
 
 type Handler struct {
@@ -57,6 +62,8 @@ type scrapeResponse struct {
 	Status          string `json:"status"`
 	BarangayFeeders int    `json:"barangay_feeders"`
 	Contractors     int    `json:"contractors"`
+	Outages         int    `json:"outages"`
+	FacebookReports int    `json:"facebook_reports"`
 }
 
 func NewHandler(store Store, ingestToken string, logger *slog.Logger, scraper Scraper) http.Handler {
@@ -70,6 +77,8 @@ func NewHandler(store Store, ingestToken string, logger *slog.Logger, scraper Sc
 	mux.HandleFunc("GET /api/barangay-feeders", h.barangayFeedersByRun)
 	mux.HandleFunc("GET /api/contractors/latest", h.latestContractors)
 	mux.HandleFunc("GET /api/contractors", h.contractorsByRun)
+	mux.HandleFunc("GET /api/outages", h.outages)
+	mux.HandleFunc("GET /api/facebook-reports", h.facebookReports)
 	return h.middleware(mux)
 }
 
@@ -111,10 +120,23 @@ func (h *Handler) scrape(w http.ResponseWriter, r *http.Request) {
 		h.internalError(w, "read scraped contractors", err)
 		return
 	}
+	since := time.Now().UTC().AddDate(-1, 0, 0)
+	outages, err := h.store.OutagesSince(r.Context(), since)
+	if err != nil {
+		h.internalError(w, "read scraped outages", err)
+		return
+	}
+	facebookReports, err := h.store.FacebookReportsSince(r.Context(), since)
+	if err != nil {
+		h.internalError(w, "read scraped Facebook reports", err)
+		return
+	}
 	writeJSON(w, http.StatusCreated, scrapeResponse{
 		Status:          "ok",
 		BarangayFeeders: len(barangays),
 		Contractors:     len(contractors),
+		Outages:         len(outages),
+		FacebookReports: len(facebookReports),
 	})
 }
 
@@ -191,15 +213,48 @@ func (h *Handler) ingest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		writeJSON(w, http.StatusCreated, ingestResponse{run.ID, run.Source, run.ScrapedAt, len(records)})
+	case model.SourceOutages:
+		var records []model.OutageEvent
+		if err := json.Unmarshal(request.Records, &records); err != nil {
+			writeError(w, http.StatusBadRequest, "records must be an outage array")
+			return
+		}
+		if err := validateOutages(records); err != nil {
+			writeError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		run, err := h.store.IngestOutages(r.Context(), records)
+		if err != nil {
+			h.internalError(w, "ingest outages", err)
+			return
+		}
+		writeJSON(w, http.StatusCreated, ingestResponse{run.ID, run.Source, run.ScrapedAt, len(records)})
+	case model.SourceFacebookReports:
+		var records []model.FacebookReport
+		if err := json.Unmarshal(request.Records, &records); err != nil {
+			writeError(w, http.StatusBadRequest, "records must be a Facebook report array")
+			return
+		}
+		if err := validateFacebookReports(records); err != nil {
+			writeError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		run, err := h.store.IngestFacebookReports(r.Context(), records)
+		if err != nil {
+			h.internalError(w, "ingest Facebook reports", err)
+			return
+		}
+		writeJSON(w, http.StatusCreated, ingestResponse{run.ID, run.Source, run.ScrapedAt, len(records)})
 	default:
-		writeError(w, http.StatusBadRequest, "source must be barangay_feeders or contractors")
+		writeError(w, http.StatusBadRequest, "source must be barangay_feeders, contractors, outages, or facebook_reports")
 	}
 }
 
 func (h *Handler) scrapeRuns(w http.ResponseWriter, r *http.Request) {
 	source := r.URL.Query().Get("source")
-	if source != "" && source != model.SourceBarangayFeeders && source != model.SourceContractors {
-		writeError(w, http.StatusBadRequest, "source must be barangay_feeders or contractors")
+	if source != "" && source != model.SourceBarangayFeeders && source != model.SourceContractors &&
+		source != model.SourceOutages && source != model.SourceFacebookReports {
+		writeError(w, http.StatusBadRequest, "invalid source")
 		return
 	}
 	runs, err := h.store.ListScrapeRuns(r.Context(), source)
@@ -208,6 +263,45 @@ func (h *Handler) scrapeRuns(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, runs)
+}
+
+func (h *Handler) outages(w http.ResponseWriter, r *http.Request) {
+	since, ok := readSince(w, r)
+	if !ok {
+		return
+	}
+	records, err := h.store.OutagesSince(r.Context(), since)
+	if err != nil {
+		h.internalError(w, "read outages", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, records)
+}
+
+func (h *Handler) facebookReports(w http.ResponseWriter, r *http.Request) {
+	since, ok := readSince(w, r)
+	if !ok {
+		return
+	}
+	records, err := h.store.FacebookReportsSince(r.Context(), since)
+	if err != nil {
+		h.internalError(w, "read Facebook reports", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, records)
+}
+
+func readSince(w http.ResponseWriter, r *http.Request) (time.Time, bool) {
+	days := 90
+	if value := r.URL.Query().Get("days"); value != "" {
+		parsed, err := strconv.Atoi(value)
+		if err != nil || parsed < 7 || parsed > 365 {
+			writeError(w, http.StatusBadRequest, "days must be between 7 and 365")
+			return time.Time{}, false
+		}
+		days = parsed
+	}
+	return time.Now().UTC().AddDate(0, 0, -days), true
 }
 
 func (h *Handler) latestBarangayFeeders(w http.ResponseWriter, r *http.Request) {

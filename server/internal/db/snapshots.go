@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/eralmendral/Beneco-Tracker-Dashboard/server/internal/model"
 	"github.com/jackc/pgx/v5"
@@ -17,6 +18,58 @@ func (s *Store) LatestBarangayFeeders(ctx context.Context) ([]model.BarangayFeed
 		return nil, err
 	}
 	return s.BarangayFeedersByRun(ctx, runID)
+}
+
+func (s *Store) OutagesSince(ctx context.Context, since time.Time) ([]model.OutageEvent, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT source_id, feeder, area, COALESCE(cause, ''), started_at,
+		       restored_at, duration_minutes, status, source_url
+		FROM outage_events
+		WHERE started_at >= $1
+		ORDER BY started_at DESC, source_id, feeder`, since)
+	if err != nil {
+		return nil, fmt.Errorf("query outages: %w", err)
+	}
+	defer rows.Close()
+
+	records := make([]model.OutageEvent, 0)
+	for rows.Next() {
+		var record model.OutageEvent
+		if err := rows.Scan(&record.SourceID, &record.Feeder, &record.Area, &record.Cause,
+			&record.StartedAt, &record.RestoredAt, &record.DurationMinutes, &record.Status, &record.SourceURL); err != nil {
+			return nil, fmt.Errorf("scan outage: %w", err)
+		}
+		records = append(records, record)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate outages: %w", err)
+	}
+	return records, nil
+}
+
+func (s *Store) FacebookReportsSince(ctx context.Context, since time.Time) ([]model.FacebookReport, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT source_id, post_url, reported_at, COALESCE(location, ''), feeder, comment_excerpt
+		FROM facebook_reports
+		WHERE reported_at >= $1
+		ORDER BY reported_at DESC, source_id, feeder`, since)
+	if err != nil {
+		return nil, fmt.Errorf("query Facebook reports: %w", err)
+	}
+	defer rows.Close()
+
+	records := make([]model.FacebookReport, 0)
+	for rows.Next() {
+		var record model.FacebookReport
+		if err := rows.Scan(&record.SourceID, &record.PostURL, &record.ReportedAt, &record.Location, &record.Feeder, &record.CommentExcerpt); err != nil {
+			return nil, fmt.Errorf("scan Facebook report: %w", err)
+		}
+		records = append(records, record)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate Facebook reports: %w", err)
+	}
+	return records, nil
 }
 
 func (s *Store) BarangayFeedersByRun(ctx context.Context, runID int64) ([]model.BarangayFeeder, error) {

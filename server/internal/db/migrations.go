@@ -3,12 +3,12 @@ package db
 import (
 	"context"
 	"fmt"
+	"sort"
+	"strings"
 
 	"github.com/eralmendral/Beneco-Tracker-Dashboard/server/migrations"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
-
-const initialMigration = "0001_init.sql"
 
 func RunMigrations(ctx context.Context, pool *pgxpool.Pool) error {
 	tx, err := pool.Begin(ctx)
@@ -27,25 +27,39 @@ func RunMigrations(ctx context.Context, pool *pgxpool.Pool) error {
 		return fmt.Errorf("create migration ledger: %w", err)
 	}
 
-	var applied bool
-	if err := tx.QueryRow(ctx,
-		`SELECT EXISTS (SELECT 1 FROM schema_migrations WHERE version = $1)`,
-		initialMigration,
-	).Scan(&applied); err != nil {
-		return fmt.Errorf("check migration: %w", err)
+	entries, err := migrations.Files.ReadDir(".")
+	if err != nil {
+		return fmt.Errorf("list migrations: %w", err)
 	}
-	if !applied {
-		sql, err := migrations.Files.ReadFile(initialMigration)
+	versions := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".sql") {
+			versions = append(versions, entry.Name())
+		}
+	}
+	sort.Strings(versions)
+	for _, version := range versions {
+		var applied bool
+		if err := tx.QueryRow(ctx,
+			`SELECT EXISTS (SELECT 1 FROM schema_migrations WHERE version = $1)`,
+			version,
+		).Scan(&applied); err != nil {
+			return fmt.Errorf("check migration %s: %w", version, err)
+		}
+		if applied {
+			continue
+		}
+		sql, err := migrations.Files.ReadFile(version)
 		if err != nil {
-			return fmt.Errorf("read migration: %w", err)
+			return fmt.Errorf("read migration %s: %w", version, err)
 		}
 		if _, err := tx.Exec(ctx, string(sql)); err != nil {
-			return fmt.Errorf("apply migration: %w", err)
+			return fmt.Errorf("apply migration %s: %w", version, err)
 		}
 		if _, err := tx.Exec(ctx,
-			`INSERT INTO schema_migrations (version) VALUES ($1)`, initialMigration,
+			`INSERT INTO schema_migrations (version) VALUES ($1)`, version,
 		); err != nil {
-			return fmt.Errorf("record migration: %w", err)
+			return fmt.Errorf("record migration %s: %w", version, err)
 		}
 	}
 

@@ -19,12 +19,18 @@ type fakeStore struct {
 	healthErr           error
 	barangayRun         model.ScrapeRun
 	contractorRun       model.ScrapeRun
+	outageRun           model.ScrapeRun
+	facebookRun         model.ScrapeRun
 	ingestedBarangays   []model.BarangayFeeder
 	ingestedContractors []model.Contractor
+	ingestedOutages     []model.OutageEvent
+	ingestedFacebook    []model.FacebookReport
 	latestBarangays     []model.BarangayFeeder
 	latestBarangayErr   error
 	latestContractors   []model.Contractor
 	latestContractorErr error
+	outages             []model.OutageEvent
+	facebookReports     []model.FacebookReport
 }
 
 func (f *fakeStore) Health(context.Context) error { return f.healthErr }
@@ -37,6 +43,16 @@ func (f *fakeStore) IngestBarangayFeeders(_ context.Context, records []model.Bar
 func (f *fakeStore) IngestContractors(_ context.Context, records []model.Contractor) (model.ScrapeRun, error) {
 	f.ingestedContractors = records
 	return f.contractorRun, nil
+}
+
+func (f *fakeStore) IngestOutages(_ context.Context, records []model.OutageEvent) (model.ScrapeRun, error) {
+	f.ingestedOutages = records
+	return f.outageRun, nil
+}
+
+func (f *fakeStore) IngestFacebookReports(_ context.Context, records []model.FacebookReport) (model.ScrapeRun, error) {
+	f.ingestedFacebook = records
+	return f.facebookRun, nil
 }
 
 func (f *fakeStore) ListScrapeRuns(context.Context, string) ([]model.ScrapeRun, error) {
@@ -57,6 +73,14 @@ func (f *fakeStore) LatestContractors(context.Context) ([]model.Contractor, erro
 
 func (f *fakeStore) ContractorsByRun(context.Context, int64) ([]model.Contractor, error) {
 	return []model.Contractor{}, nil
+}
+
+func (f *fakeStore) OutagesSince(context.Context, time.Time) ([]model.OutageEvent, error) {
+	return f.outages, nil
+}
+
+func (f *fakeStore) FacebookReportsSince(context.Context, time.Time) ([]model.FacebookReport, error) {
+	return f.facebookReports, nil
 }
 
 type fakeScraper struct {
@@ -124,6 +148,42 @@ func TestIngestRejectsEmptyRecords(t *testing.T) {
 	}
 }
 
+func TestIngestOutages(t *testing.T) {
+	now := time.Date(2026, time.September, 2, 10, 0, 0, 0, time.UTC)
+	store := &fakeStore{outageRun: model.ScrapeRun{ID: 43, Source: model.SourceOutages, ScrapedAt: now}}
+	request := httptest.NewRequest(http.MethodPost, "/api/ingest", bytes.NewBufferString(
+		`{"source":"outages","records":[{"source_id":"68012:FEEDER_12","feeder":" FEEDER_12 ","area":" Woodsgate ","started_at":"2026-09-02T03:37:03Z","duration_minutes":419,"status":"Restored","source_url":"https://beneco.com.ph/"}]}`))
+	request.Header.Set("Authorization", "Bearer test-token")
+	response := httptest.NewRecorder()
+
+	testHandler(store).ServeHTTP(response, request)
+
+	if response.Code != http.StatusCreated {
+		t.Fatalf("status = %d, want %d; body = %s", response.Code, http.StatusCreated, response.Body.String())
+	}
+	if len(store.ingestedOutages) != 1 || store.ingestedOutages[0].Feeder != "FEEDER_12" {
+		t.Fatalf("ingested outages = %#v", store.ingestedOutages)
+	}
+}
+
+func TestIngestFacebookComplaintExcerpt(t *testing.T) {
+	now := time.Date(2026, time.September, 3, 10, 0, 0, 0, time.UTC)
+	store := &fakeStore{facebookRun: model.ScrapeRun{ID: 44, Source: model.SourceFacebookReports, ScrapedAt: now}}
+	request := httptest.NewRequest(http.MethodPost, "/api/ingest", bytes.NewBufferString(
+		`{"source":"facebook_reports","records":[{"source_id":"comment-1","post_url":"https://www.facebook.com/benguetelectric/posts/123/","reported_at":"2026-09-03T02:00:00Z","location":" Camp 7 ","feeder":" FEEDER_12 ","comment_excerpt":" No power since this morning "}]}`))
+	request.Header.Set("Authorization", "Bearer test-token")
+	response := httptest.NewRecorder()
+
+	testHandler(store).ServeHTTP(response, request)
+
+	if response.Code != http.StatusCreated {
+		t.Fatalf("status = %d, want %d; body = %s", response.Code, http.StatusCreated, response.Body.String())
+	}
+	if len(store.ingestedFacebook) != 1 || store.ingestedFacebook[0].CommentExcerpt != "No power since this morning" {
+		t.Fatalf("ingested Facebook reports = %#v", store.ingestedFacebook)
+	}
+}
+
 func TestLatestSnapshotNotFoundAndCORS(t *testing.T) {
 	store := &fakeStore{latestBarangayErr: db.ErrSnapshotNotFound}
 	request := httptest.NewRequest(http.MethodGet, "/api/barangay-feeders/latest", nil)
@@ -176,6 +236,8 @@ func TestScrapeReturnsLatestRecordCounts(t *testing.T) {
 	store := &fakeStore{
 		latestBarangays:   []model.BarangayFeeder{{BarangayID: 1}, {BarangayID: 2}},
 		latestContractors: []model.Contractor{{Company: "Example"}},
+		outages:           []model.OutageEvent{{SourceID: "1:FEEDER_08"}},
+		facebookReports:   []model.FacebookReport{{SourceID: "report:FEEDER_12"}},
 	}
 	request := httptest.NewRequest(http.MethodPost, "/api/scrape", nil)
 	request.Header.Set("Authorization", "Bearer test-token")
@@ -186,8 +248,19 @@ func TestScrapeReturnsLatestRecordCounts(t *testing.T) {
 	if response.Code != http.StatusCreated {
 		t.Fatalf("status = %d, want %d; body = %s", response.Code, http.StatusCreated, response.Body.String())
 	}
-	if got := response.Body.String(); got != "{\"status\":\"ok\",\"barangay_feeders\":2,\"contractors\":1}\n" {
+	if got := response.Body.String(); got != "{\"status\":\"ok\",\"barangay_feeders\":2,\"contractors\":1,\"outages\":1,\"facebook_reports\":1}\n" {
 		t.Fatalf("body = %s", got)
+	}
+}
+
+func TestOutagesRejectsInvalidWindow(t *testing.T) {
+	request := httptest.NewRequest(http.MethodGet, "/api/outages?days=2", nil)
+	response := httptest.NewRecorder()
+
+	testHandler(&fakeStore{}).ServeHTTP(response, request)
+
+	if response.Code != http.StatusBadRequest {
+		t.Fatalf("status = %d, want %d", response.Code, http.StatusBadRequest)
 	}
 }
 

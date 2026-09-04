@@ -75,6 +75,80 @@ func (s *Store) IngestContractors(ctx context.Context, records []model.Contracto
 	return run, nil
 }
 
+func (s *Store) IngestOutages(ctx context.Context, records []model.OutageEvent) (model.ScrapeRun, error) {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return model.ScrapeRun{}, fmt.Errorf("begin outage ingest: %w", err)
+	}
+	defer tx.Rollback(ctx) //nolint:errcheck
+
+	run, err := createRun(ctx, tx, model.SourceOutages)
+	if err != nil {
+		return model.ScrapeRun{}, err
+	}
+	for _, record := range records {
+		_, err = tx.Exec(ctx, `
+			INSERT INTO outage_events (
+				scrape_run_id, source_id, feeder, area, cause, started_at,
+				restored_at, duration_minutes, status, source_url
+			) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+			ON CONFLICT (source_id, feeder) DO UPDATE SET
+				scrape_run_id = EXCLUDED.scrape_run_id,
+				area = EXCLUDED.area,
+				cause = EXCLUDED.cause,
+				started_at = EXCLUDED.started_at,
+				restored_at = EXCLUDED.restored_at,
+				duration_minutes = EXCLUDED.duration_minutes,
+				status = EXCLUDED.status,
+				source_url = EXCLUDED.source_url,
+				last_seen_at = now()`,
+			run.ID, record.SourceID, record.Feeder, record.Area, nullable(record.Cause),
+			record.StartedAt, record.RestoredAt, record.DurationMinutes, record.Status, record.SourceURL)
+		if err != nil {
+			return model.ScrapeRun{}, fmt.Errorf("upsert outage %s: %w", record.SourceID, err)
+		}
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return model.ScrapeRun{}, fmt.Errorf("commit outage ingest: %w", err)
+	}
+	return run, nil
+}
+
+func (s *Store) IngestFacebookReports(ctx context.Context, records []model.FacebookReport) (model.ScrapeRun, error) {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return model.ScrapeRun{}, fmt.Errorf("begin Facebook report ingest: %w", err)
+	}
+	defer tx.Rollback(ctx) //nolint:errcheck
+
+	run, err := createRun(ctx, tx, model.SourceFacebookReports)
+	if err != nil {
+		return model.ScrapeRun{}, err
+	}
+	for _, record := range records {
+		_, err = tx.Exec(ctx, `
+			INSERT INTO facebook_reports (
+				scrape_run_id, source_id, post_url, reported_at, location, feeder, comment_excerpt
+			) VALUES ($1, $2, $3, $4, $5, $6, $7)
+			ON CONFLICT (source_id, feeder) DO UPDATE SET
+				scrape_run_id = EXCLUDED.scrape_run_id,
+				post_url = EXCLUDED.post_url,
+				reported_at = EXCLUDED.reported_at,
+				location = EXCLUDED.location,
+				comment_excerpt = EXCLUDED.comment_excerpt,
+				last_seen_at = now()`,
+			run.ID, record.SourceID, record.PostURL, record.ReportedAt,
+			nullable(record.Location), record.Feeder, record.CommentExcerpt)
+		if err != nil {
+			return model.ScrapeRun{}, fmt.Errorf("upsert Facebook report %s: %w", record.SourceID, err)
+		}
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return model.ScrapeRun{}, fmt.Errorf("commit Facebook report ingest: %w", err)
+	}
+	return run, nil
+}
+
 func createRun(ctx context.Context, tx pgx.Tx, source string) (model.ScrapeRun, error) {
 	var run model.ScrapeRun
 	err := tx.QueryRow(ctx,

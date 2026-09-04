@@ -28,4 +28,5 @@ jobs:
         env:
           SERVER_URL: ${{ secrets.SERVER_URL }}
           INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
         run: python scripts/scrape_beneco.py

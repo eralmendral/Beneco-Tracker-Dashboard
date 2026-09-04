@@ -1,13 +1,14 @@
 # BENECO Tracker Dashboard
 
 A static dashboard, scheduled BENECO data scraper, and Go/PostgreSQL history API.
-Every successful ingest creates a new immutable snapshot; current data is the newest
-run for each source.
+Barangay and contractor ingests create immutable snapshots. Interruption and matched
+Facebook records are deduplicated by public source identifier so recurring pulls grow
+a durable reliability history without inflating event counts.
 
 ## Project layout
 
 - `frontend/` — static dashboard and last-known-good JSON snapshots.
-- `scripts/` — Python scraper for the barangay API and accredited-practitioner PDF.
+- `scripts/` — Python scraper for barangays, interruption events, the accredited-practitioner PDF, and privacy-minimized Facebook outage signals.
 - `server/` — Go API, PostgreSQL access, and embedded migrations.
 - `.github/workflows/scrape.yml` — daily and manually dispatched scrape job.
 - `compose.yaml` — DigitalOcean droplet deployment at
@@ -24,8 +25,12 @@ python -m http.server 8000 --directory frontend
 Open <http://127.0.0.1:8000/>. When the API is unavailable, the dashboard uses the
 bundled `frontend/data.json` and `frontend/contractors.json` snapshots.
 When the API is available, operators can use **Pull Data** in the sidebar and
-enter the configured ingest token to archive fresh source data. The token is used for
-that request only and is not stored by the browser.
+enter the configured ingest token to archive fresh feeder, contractor, unscheduled
+interruption, and social-media data in one action. The token is used for that request
+only and is not stored by the browser. The **Reliability** workspace ranks recurring
+feeder interruptions, maps affected municipalities, charts unscheduled interruption
+frequency, and shows anonymous public Facebook complaint excerpts with contact details
+removed.
 
 To run the API, copy `server/.env.example` to `server/.env`, set a reachable
 PostgreSQL `DATABASE_URL` and a long random `INGEST_TOKEN`, then:
@@ -34,6 +39,7 @@ PostgreSQL `DATABASE_URL` and a long random `INGEST_TOKEN`, then:
 cd server
 $env:DATABASE_URL = "postgresql://..."
 $env:INGEST_TOKEN = "..."
+$env:FACEBOOK_ACCESS_TOKEN = "..." # optional; expands collection beyond the featured post
 go run ./cmd/server
 ```
 
@@ -74,6 +80,9 @@ The dashboard is available at
 `http://<DROPLET_IP>/projects/beneco-dashboard/`. Set the GitHub Actions
 `SERVER_URL` secret to that URL without the trailing slash, and set
 `INGEST_TOKEN` to the same value used by the API.
+Add the optional `FACEBOOK_ACCESS_TOKEN` secret to collect comments across recent
+BENECO page posts through Meta's Pages API; without it, the public post embedded on
+BENECO's website remains the fallback source.
 
 Only port 80 is published by Compose. The Go service remains on the private Compose
 network, and Nginx proxies the prefixed API path.

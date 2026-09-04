@@ -61,6 +61,63 @@ func validateContractors(records []model.Contractor) error {
 	return nil
 }
 
+func validateOutages(records []model.OutageEvent) error {
+	if len(records) == 0 {
+		return errors.New("records must not be empty")
+	}
+	if len(records) > maxRecords {
+		return fmt.Errorf("records must not contain more than %d items", maxRecords)
+	}
+	for i := range records {
+		record := &records[i]
+		record.SourceID = strings.TrimSpace(record.SourceID)
+		record.Feeder = strings.TrimSpace(record.Feeder)
+		record.Area = strings.TrimSpace(record.Area)
+		record.Cause = strings.TrimSpace(record.Cause)
+		record.Status = strings.TrimSpace(record.Status)
+		record.SourceURL = strings.TrimSpace(record.SourceURL)
+		if record.SourceID == "" || record.Feeder == "" || record.Area == "" ||
+			record.Status == "" || record.SourceURL == "" || record.StartedAt.IsZero() {
+			return fmt.Errorf("records[%d] is missing a required field", i)
+		}
+		if record.DurationMinutes < 0 {
+			return fmt.Errorf("records[%d].duration_minutes must not be negative", i)
+		}
+		if tooLong(record.SourceID, 100) || tooLong(record.Feeder, 100) ||
+			tooLong(record.Area, 10_000) || tooLong(record.Cause, 2000) ||
+			tooLong(record.Status, 100) || tooLong(record.SourceURL, 2000) {
+			return fmt.Errorf("records[%d] contains an overlong field", i)
+		}
+	}
+	return nil
+}
+
+func validateFacebookReports(records []model.FacebookReport) error {
+	if len(records) == 0 {
+		return errors.New("records must not be empty")
+	}
+	if len(records) > maxRecords {
+		return fmt.Errorf("records must not contain more than %d items", maxRecords)
+	}
+	for i := range records {
+		record := &records[i]
+		record.SourceID = strings.TrimSpace(record.SourceID)
+		record.PostURL = strings.TrimSpace(record.PostURL)
+		record.Location = strings.TrimSpace(record.Location)
+		record.Feeder = strings.TrimSpace(record.Feeder)
+		record.CommentExcerpt = strings.TrimSpace(record.CommentExcerpt)
+		if record.SourceID == "" || record.PostURL == "" || record.Feeder == "" || record.ReportedAt.IsZero() {
+			return fmt.Errorf("records[%d] is missing a required field", i)
+		}
+		if tooLong(record.SourceID, 200) || tooLong(record.PostURL, 2000) ||
+			tooLong(record.Location, 500) || tooLong(record.Feeder, 100) ||
+			tooLong(record.CommentExcerpt, 280) {
+			return fmt.Errorf("records[%d] contains an overlong field", i)
+		}
+	}
+	return nil
+}
+
 func tooLong(value string, limit int) bool {
 	return len([]rune(value)) > limit
 }

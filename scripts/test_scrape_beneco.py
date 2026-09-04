@@ -1,9 +1,17 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
 
 from pdf_cells import extract_cell_text
-from scrape_beneco import discover_aep_pdf_url, write_json
+from scrape_beneco import (
+    discover_aep_pdf_url,
+    discover_facebook_embed_url,
+    normalize_feeders,
+    parse_facebook_reports,
+    parse_graph_facebook_reports,
+    write_json,
+)
 
 
 class FakePage:
@@ -32,6 +40,89 @@ class ScraperTests(unittest.TestCase):
     def test_missing_accredited_practitioner_link_is_an_error(self):
         with self.assertRaisesRegex(ValueError, "could not find"):
             discover_aep_pdf_url('<a href="other.pdf">Other form</a>')
+
+    def test_normalizes_single_and_multi_feeder_labels(self):
+        self.assertEqual(normalize_feeders("Feeder 08"), ["FEEDER_08"])
+        self.assertEqual(
+            normalize_feeders("Feeders 11 12 14"),
+            ["FEEDER_11", "FEEDER_12", "FEEDER_14"],
+        )
+        self.assertEqual(normalize_feeders("Circuit 3"), ["CIRCUIT_03"])
+        self.assertEqual(normalize_feeders("Dalicno"), ["FEEDER_DALICNO"])
+        self.assertEqual(normalize_feeders("Feeder 8 since 3am"), ["FEEDER_08"])
+
+    def test_discovers_official_facebook_embed(self):
+        source = '<iframe src="https://www.facebook.com/plugins/post.php?href=post&amp;width=500"></iframe>'
+        self.assertEqual(
+            discover_facebook_embed_url(source),
+            "https://www.facebook.com/plugins/post.php?href=post&width=500",
+        )
+
+    def test_facebook_report_is_matched_with_anonymous_comment_excerpt(self):
+        post = {
+            "@type": "SocialMediaPosting",
+            "url": "https://www.facebook.com/benguetelectric/posts/123/",
+            "comment": [{
+                "identifier": "comment-1",
+                "dateCreated": "2026-09-02T03:57:35-0700",
+                "text": "Woodsgate Subdivision since Tuesday 3am hanggang ngayon walang kuryente",
+                "author": {"name": "Private Name"},
+            }],
+        }
+        embed = f'<script type="application/ld+json">{json.dumps(post)}</script>'
+        outages = [{"feeder": "FEEDER_12", "area": "Parts of Woodsgate tapped at Pelota Court"}]
+
+        reports = parse_facebook_reports(embed, outages, [])
+
+        self.assertEqual(len(reports), 1)
+        self.assertEqual(reports[0]["feeder"], "FEEDER_12")
+        self.assertEqual(reports[0]["location"], "Woodsgate Subdivision")
+        self.assertEqual(
+            reports[0]["comment_excerpt"],
+            "Woodsgate Subdivision since Tuesday 3am hanggang ngayon walang kuryente",
+        )
+        self.assertNotIn("author", reports[0])
+        self.assertNotIn("text", reports[0])
+
+    def test_unmapped_complaint_is_kept_and_contact_details_are_redacted(self):
+        post = {
+            "@type": "SocialMediaPosting",
+            "url": "https://www.facebook.com/benguetelectric/posts/456/",
+            "comment": [{
+                "identifier": "comment-2",
+                "dateCreated": "2026-09-03T10:15:00+08:00",
+                "text": "Wala pa rin kuryente, call me at 09171234567 or test@example.com",
+            }],
+        }
+        embed = f'<script type="application/ld+json">{json.dumps(post)}</script>'
+
+        reports = parse_facebook_reports(embed, [], [])
+
+        self.assertEqual(len(reports), 1)
+        self.assertEqual(reports[0]["feeder"], "UNMAPPED")
+        self.assertIn("[number removed]", reports[0]["comment_excerpt"])
+        self.assertIn("[email removed]", reports[0]["comment_excerpt"])
+        self.assertNotIn("09171234567", reports[0]["comment_excerpt"])
+
+    def test_graph_comments_are_normalized_for_multiple_page_posts(self):
+        payload = {"data": [{
+            "id": "post-1",
+            "permalink_url": "https://www.facebook.com/benguetelectric/posts/789/",
+            "comments": {"data": [{
+                "id": "comment-3",
+                "created_time": "2026-09-03T12:00:00+0800",
+                "message": "Camp 7 no power since this morning",
+                "from": {"name": "Not Retained"},
+            }]},
+        }]}
+        barangays = [{"barangay": "Camp 7", "feeder": "FEEDER_12"}]
+
+        reports = parse_graph_facebook_reports(payload, [], barangays)
+
+        self.assertEqual(len(reports), 1)
+        self.assertEqual(reports[0]["source_id"], "comment-3")
+        self.assertEqual(reports[0]["feeder"], "FEEDER_12")
+        self.assertNotIn("from", reports[0])
 
     def test_cell_extraction_excludes_characters_centered_outside_band(self):
         page = FakePage([

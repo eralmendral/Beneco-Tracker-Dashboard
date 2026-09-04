@@ -485,6 +485,79 @@
     .prc-RME { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
     .prc-PEE { background: #fdf4ff; color: #7e22ce; border: 1px solid #e9d5ff; }
     .cmap-empty { padding: 24px 10px; text-align: center; color: var(--gray-400); font-size: 12px; }
+
+    /* ── Feeder reliability ── */
+    .reliability-head {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 18px;
+      margin-bottom: 12px;
+    }
+    .reliability-kicker {
+      display: block; margin-bottom: 5px; color: #b45309; font-size: 10px;
+      font-weight: 800; text-transform: uppercase; letter-spacing: .09em;
+    }
+    .reliability-head h1 { color: var(--gray-900); font-size: 24px; line-height: 1.15; }
+    .reliability-head p { max-width: 720px; margin-top: 6px; color: var(--gray-600); font-size: 12px; line-height: 1.55; }
+    .reliability-window { display: grid; flex: 0 0 150px; gap: 5px; }
+    .reliability-window label { color: var(--gray-400); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .reliability-window select { width: 100%; min-height: 36px; }
+    .reliability-source {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 7px 12px;
+      margin-bottom: 14px; padding: 8px 10px; border: 1px solid #dbe7e2;
+      border-radius: 6px; background: #f4faf7; color: var(--gray-600); font-size: 11px;
+    }
+    .reliability-source strong { color: #245446; }
+    .reliability-source a { color: #1d4ed8; font-weight: 700; text-decoration: none; }
+    .reliability-source a:hover { text-decoration: underline; }
+    .reliability-state { min-height: 18px; margin-bottom: 10px; color: var(--gray-600); font-size: 11px; }
+    .reliability-state.error { color: #b91c1c; }
+    .reliability-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, .9fr); gap: 16px; margin-bottom: 16px; }
+    .reliability-chart { position: relative; height: 390px; }
+    .frequency-chart { position: relative; height: 290px; }
+    #reliability-map { width: 100%; height: 390px; background: #dfe9e4; }
+    .risk-legend { display: flex; flex-wrap: wrap; gap: 10px; color: var(--gray-600); font-size: 10px; }
+    .risk-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .risk-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .reliability-table-wrap { overflow-x: auto; }
+    .reliability-table th { cursor: default; }
+    .reliability-table td { padding-top: 9px; padding-bottom: 9px; }
+    .reliability-table .feeder-name { color: var(--gray-900); font-weight: 750; white-space: nowrap; }
+    .reliability-table .location-cell { min-width: 240px; max-width: 420px; color: var(--gray-600); line-height: 1.4; }
+    .risk-pill { display: inline-flex; min-width: 64px; justify-content: center; padding: 3px 7px; border-radius: 20px; font-size: 10px; font-weight: 800; }
+    .risk-critical { background: #fee2e2; color: #991b1b; }
+    .risk-high { background: #ffedd5; color: #9a3412; }
+    .risk-watch { background: #fef3c7; color: #92400e; }
+    .risk-stable { background: #dcfce7; color: #166534; }
+    .social-signal-list { display: grid; gap: 8px; }
+    .social-signal {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px;
+      padding: 12px 0; border-bottom: 1px solid var(--gray-100);
+    }
+    .social-signal:last-child { border-bottom: 0; }
+    .social-signal strong { display: block; color: var(--gray-900); font-size: 12px; }
+    .social-signal small { display: block; margin-top: 2px; color: var(--gray-400); font-size: 10px; }
+    .social-signal a { align-self: center; color: #1d4ed8; font-size: 11px; font-weight: 700; text-decoration: none; }
+    .social-comment {
+      margin: 7px 0 0; padding-left: 10px; border-left: 3px solid #c4b5fd;
+      color: var(--gray-700); font-size: 12px; line-height: 1.5;
+    }
+    .social-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 7px; }
+    .social-meta span { color: var(--gray-400); font-size: 10px; }
+    .frequency-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+    .frequency-kpi { padding: 10px; border: 1px solid var(--gray-100); border-radius: 7px; background: var(--gray-50); }
+    .frequency-kpi span { display: block; color: var(--gray-400); font-size: 9px; font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
+    .frequency-kpi strong { display: block; margin-top: 3px; color: var(--gray-900); font-size: 17px; }
+    .frequency-table { max-height: 232px; overflow: auto; }
+    .reliability-note { color: var(--gray-600); font-size: 11px; line-height: 1.55; }
+    .reliability-note strong { color: var(--gray-900); }
+    @media (max-width: 1020px) { .reliability-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 620px) {
+      .reliability-head { align-items: stretch; flex-direction: column; }
+      .reliability-window { flex-basis: auto; }
+      .reliability-chart, #reliability-map { height: 340px; }
+      .frequency-chart { height: 250px; }
+      .social-signal { grid-template-columns: 1fr; }
+      .social-signal a { justify-self: start; }
+    }
   </style>
 </head>
 <body>
@@ -501,6 +574,7 @@
   <div class="sidenav-group">
     <div class="sidenav-label">Workspace</div>
     <button class="nav-tab active" data-page="dashboard" title="Dashboard"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 13 9-9 9 9"/><path d="M5 11v9h14v-9"/><path d="M9 20v-6h6v6"/></svg></span><span class="nav-label">Dashboard</span></button>
+    <button class="nav-tab" data-page="reliability" title="Feeder Reliability"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 2.8 19h18.4z"/><path d="M12 9v4M12 17h.01"/></svg></span><span class="nav-label">Reliability</span></button>
     <button class="nav-tab" data-page="sysdata" title="System Data"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 3-4 3 2 5-7"/></svg></span><span class="nav-label">System Data</span></button>
     <button class="nav-tab" data-page="network" title="Network"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="12" cy="18" r="2"/><path d="m7.7 7.1 2.8 8.1M16.2 9.2l-2.8 7"/></svg></span><span class="nav-label">Network</span></button>
     <button class="nav-tab" data-page="contractors" title="Contractors"><span class="nav-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 11a3 3 0 1 0 0-6"/><path d="M17 14a5 5 0 0 1 4 6"/></svg></span><span class="nav-label">Contractors</span></button>
@@ -510,7 +584,7 @@
     <div class="sidenav-label">Standalone Pages</div>
   </div>
   <div class="sidenav-actions">
-    <button class="sidenav-refresh sidenav-scrape" id="scrape-data" type="button" title="Pull and archive the latest BENECO data" disabled>
+    <button class="sidenav-refresh sidenav-scrape" id="scrape-data" type="button" title="Pull BENECO interruption records and public social media complaints" disabled>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
       <span class="scrape-label" aria-live="polite">Pull Data</span>
     </button>
@@ -593,6 +667,102 @@
     </div>
   </div>
 
+</div>
+
+<!-- ═══════════════════════════════ FEEDER RELIABILITY ═══════════════════════════════ -->
+<div class="page" id="page-reliability">
+  <div class="reliability-head">
+    <div>
+      <span class="reliability-kicker">Service continuity</span>
+      <h1>Feeder Reliability Watch</h1>
+      <p>See which feeders repeatedly appear in BENECO interruption records, how long restoration takes, and which municipalities are affected. This is an observed disruption signal—not an engineering assessment of equipment condition.</p>
+    </div>
+    <div class="reliability-window">
+      <label for="reliability-days">Observation window</label>
+      <select id="reliability-days">
+        <option value="14">Last 14 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="90" selected>Last 90 days</option>
+        <option value="365">All archived (1 year)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="reliability-source">
+    <strong>Backend archive</strong>
+    <span>Official unscheduled interruption events from BENECO, with privacy-minimized public complaints from its Facebook page.</span>
+    <a href="https://beneco.com.ph/index.html" target="_blank" rel="noopener">BENECO service feed ↗</a>
+    <a href="https://www.facebook.com/benguetelectric" target="_blank" rel="noopener">Official Facebook page ↗</a>
+  </div>
+  <div class="reliability-state" id="reliability-state" role="status">Open this view to load interruption history.</div>
+
+  <div class="stat-grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div class="stat-card rose"><div class="stat-label">Unscheduled Events</div><div class="stat-value" id="rel-events">—</div><div class="stat-sub" id="rel-range">In selected period</div></div>
+    <div class="stat-card amber"><div class="stat-label">Most Recurrent</div><div class="stat-value" id="rel-top" style="font-size:20px">—</div><div class="stat-sub" id="rel-top-count">No data yet</div></div>
+    <div class="stat-card blue"><div class="stat-label">Average Restoration</div><div class="stat-value" id="rel-average" style="font-size:22px">—</div><div class="stat-sub">Completed interruptions</div></div>
+    <div class="stat-card purple"><div class="stat-label">Social Complaints</div><div class="stat-value" id="rel-social">—</div><div class="stat-sub">Anonymous excerpts; contacts removed</div></div>
+  </div>
+
+  <div class="reliability-grid">
+    <div class="card">
+      <div class="card-head" data-icon="!"><span class="head-copy"><span class="head-title">Recurring interruptions by feeder</span><span class="head-desc">Relative watch score combines frequency, duration, ongoing events, and matched reports</span></span></div>
+      <div class="card-body"><div class="reliability-chart"><canvas id="reliability-chart" role="img" aria-label="Ranked feeder watch scores"></canvas></div></div>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <div class="card-head" data-icon="⌖"><span class="head-copy"><span class="head-title">Affected municipalities</span><span class="head-desc">Marker color follows the highest feeder watch level observed there</span></span></div>
+      <div id="reliability-map" aria-label="Map of observed feeder interruption risk by municipality"></div>
+      <div class="card-body"><div class="risk-legend"><span><i class="risk-dot" style="background:#b91c1c"></i>Critical</span><span><i class="risk-dot" style="background:#ea580c"></i>High</span><span><i class="risk-dot" style="background:#d97706"></i>Watch</span><span><i class="risk-dot" style="background:#16a34a"></i>Lower observed</span></div></div>
+    </div>
+  </div>
+
+  <div class="reliability-grid">
+    <div class="card">
+      <div class="card-head" data-icon="≈"><span class="head-copy"><span class="head-title">Unscheduled interruption frequency</span><span class="head-desc">Unique BENECO outage incidents per day or week in the archived observation span</span></span></div>
+      <div class="card-body">
+        <div class="frequency-chart"><canvas id="frequency-chart" role="img" aria-label="Unscheduled interruption frequency over time"></canvas></div>
+        <div class="risk-legend"><span><i class="risk-dot" style="background:#b91c1c"></i>Peak frequency</span><span><i class="risk-dot" style="background:#ea580c"></i>High</span><span><i class="risk-dot" style="background:#d97706"></i>Moderate</span><span><i class="risk-dot" style="background:#16a34a"></i>Lower</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head" data-icon="#"><span class="head-copy"><span class="head-title">Unscheduled interruption statistics</span><span class="head-desc">Frequency uses unique incidents and the actual archived observation span</span></span></div>
+      <div class="card-body">
+        <div class="frequency-kpis">
+          <div class="frequency-kpi"><span>Incident rate</span><strong id="unscheduled-rate">—</strong></div>
+          <div class="frequency-kpi"><span>Affected feeders</span><strong id="unscheduled-feeders">—</strong></div>
+          <div class="frequency-kpi"><span>Peak day</span><strong id="unscheduled-peak">—</strong></div>
+          <div class="frequency-kpi"><span>Ongoing incidents</span><strong id="unscheduled-ongoing">—</strong></div>
+        </div>
+        <div class="frequency-table">
+          <table class="reliability-table">
+            <thead><tr><th>Feeder</th><th>Events</th><th>Per week</th><th>Avg. restore</th></tr></thead>
+            <tbody id="unscheduled-table"><tr class="no-results"><td colspan="4">Loading frequency data…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head" data-icon="↗"><span class="head-copy"><span class="head-title">Feeder watch list</span><span class="head-desc">Ranked from the interruption records currently archived by the backend</span></span></div>
+    <div class="reliability-table-wrap">
+      <table class="reliability-table">
+        <thead><tr><th>Feeder</th><th>Watch level</th><th>Events</th><th>Interrupted</th><th>Social matches</th><th>Observed locations</th><th>Latest</th></tr></thead>
+        <tbody id="reliability-table"><tr class="no-results"><td colspan="7">Loading interruption history…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head" data-icon="f"><span class="head-copy"><span class="head-title">Social Media comments &amp; customer complaints</span><span class="head-desc">Public outage-related excerpts from BENECO's Facebook posts; profile names and contact details are not retained</span></span></div>
+    <div class="card-body"><div class="social-signal-list" id="reliability-social"><div class="reliability-note">No public complaints loaded.</div></div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-head" data-icon="i"><span class="head-copy"><span class="head-title">How to read this view</span><span class="head-desc">Context for responsible interpretation</span></span></div>
+      <div class="card-body reliability-note"><strong>The watch score is comparative.</strong> Each unscheduled event contributes 2 points, every 12 interrupted hours contributes 1 point, an ongoing event contributes 2 points, and a feeder-matched social complaint contributes 0.5 point. Scores are normalized to the highest observed feeder. Weather, vegetation, NGCP supply, and equipment faults may all affect the result. Social comments are customer reports, not verified outage records; use the linked source before making operational decisions.</div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════ SYSTEM DATA ═══════════════════════════════ -->
@@ -904,8 +1074,8 @@
 
 <dialog class="scrape-dialog" id="scrape-dialog" aria-labelledby="scrape-dialog-title">
   <form class="scrape-form" id="scrape-form">
-    <h2 class="scrape-title" id="scrape-dialog-title">Pull latest BENECO data</h2>
-    <p class="scrape-copy">This downloads BENECO's current feeder and accredited-contractor data, then saves both as new immutable history snapshots.</p>
+    <h2 class="scrape-title" id="scrape-dialog-title">Pull BENECO and social data</h2>
+    <p class="scrape-copy">This archives BENECO's feeder directory, accredited contractors, and unscheduled interruption feed. It also collects public outage complaints from BENECO's Facebook posts, storing only anonymous excerpts with contact details removed.</p>
     <label class="scrape-field" for="scrape-token">
       Ingest token
       <input id="scrape-token" name="token" type="password" autocomplete="off" required />
@@ -1477,6 +1647,384 @@ function initContractorMap() {
   });
 }
 
+/* ═══════════════════════ FEEDER RELIABILITY ═══════════════════════ */
+const RELIABILITY_COLORS = {
+  critical: "#b91c1c",
+  high: "#ea580c",
+  watch: "#d97706",
+  stable: "#16a34a",
+};
+let reliabilityLoaded = false;
+let reliabilityLoading = false;
+let reliabilityEvents = [];
+let reliabilityReports = [];
+let reliabilityChart = null;
+let reliabilityFrequencyChart = null;
+let reliabilityMap = null;
+let reliabilityMapLayer = null;
+
+function relEscape(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[character]);
+}
+
+function relFeederName(value) {
+  const feeder = String(value || "");
+  if (feeder.startsWith("FEEDER_")) return `Feeder ${feeder.slice(7).replace(/^0(?=\d)/, "")}`;
+  if (feeder.startsWith("CIRCUIT_")) return `Circuit ${feeder.slice(8).replace(/^0(?=\d)/, "")}`;
+  return feeder.replaceAll("_", " ");
+}
+
+function relDuration(minutes) {
+  if (!Number.isFinite(minutes) || minutes <= 0) return "—";
+  const hours = minutes / 60;
+  if (hours < 1) return `${Math.round(minutes)} min`;
+  if (hours < 24) return `${hours.toFixed(1)} hr`;
+  return `${(hours / 24).toFixed(1)} days`;
+}
+
+function relLevel(score) {
+  if (score >= 75) return { key: "critical", label: "Critical" };
+  if (score >= 50) return { key: "high", label: "High" };
+  if (score >= 25) return { key: "watch", label: "Watch" };
+  return { key: "stable", label: "Lower" };
+}
+
+function relEventMunicipalities(area) {
+  const normalized = cmNorm(area);
+  const found = new Set(
+    Object.keys(MUNI_CENTERS).filter(municipality => normalized.includes(cmNorm(municipality)))
+  );
+  RAW.forEach(record => {
+    const barangay = cmNorm(record.barangay);
+    if (barangay.length >= 4 && normalized.includes(barangay)) found.add(record.municipality);
+  });
+  return [...found];
+}
+
+function relRankings(events, reports) {
+  const grouped = new Map();
+  const ensure = feeder => {
+    if (!grouped.has(feeder)) grouped.set(feeder, {
+      feeder, events: 0, duration: 0, ongoing: 0, reports: 0, latest: 0, locations: new Map(), raw: 0, score: 0
+    });
+    return grouped.get(feeder);
+  };
+
+  events.forEach(event => {
+    const row = ensure(event.feeder);
+    row.events += 1;
+    row.duration += Math.max(0, Number(event.duration_minutes) || 0);
+    if (String(event.status).toLowerCase() !== "restored") row.ongoing += 1;
+    row.latest = Math.max(row.latest, Date.parse(event.started_at) || 0);
+    relEventMunicipalities(event.area).forEach(municipality =>
+      row.locations.set(municipality, (row.locations.get(municipality) || 0) + 1)
+    );
+  });
+  reports.forEach(report => {
+    if (!report.feeder || report.feeder === "UNMAPPED") return;
+    const row = ensure(report.feeder);
+    row.reports += 1;
+    row.latest = Math.max(row.latest, Date.parse(report.reported_at) || 0);
+  });
+
+  const rows = [...grouped.values()];
+  rows.forEach(row => {
+    row.raw = row.events * 2 + row.duration / 720 + row.ongoing * 2 + row.reports * .5;
+    row.locationNames = [...row.locations.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([name]) => name);
+  });
+  const maximum = Math.max(0, ...rows.map(row => row.raw));
+  rows.forEach(row => { row.score = maximum ? Math.round(row.raw / maximum * 100) : 0; });
+  return rows.sort((a, b) => b.score - a.score || b.events - a.events || b.duration - a.duration);
+}
+
+function relUniqueEvents(events) {
+  const unique = new Map();
+  events.forEach(event => {
+    if (!unique.has(event.source_id)) unique.set(event.source_id, event);
+  });
+  return [...unique.values()];
+}
+
+function relFrequencyColor(count, maximum) {
+  if (!count) return "#cbd5e1";
+  const ratio = maximum ? count / maximum : 0;
+  if (ratio >= .75) return RELIABILITY_COLORS.critical;
+  if (ratio >= .5) return RELIABILITY_COLORS.high;
+  if (ratio >= .25) return RELIABILITY_COLORS.watch;
+  return RELIABILITY_COLORS.stable;
+}
+
+function relRenderFrequency(events) {
+  const uniqueEvents = relUniqueEvents(events);
+  const starts = uniqueEvents.map(event => Date.parse(event.started_at)).filter(Number.isFinite);
+  const first = starts.length ? Math.min(...starts) : 0;
+  const last = starts.length ? Math.max(...starts) : 0;
+  const spanDays = starts.length ? Math.max(1, Math.ceil((last - first) / 86400000) + 1) : 0;
+  const normalizedWeeks = Math.max(1, spanDays / 7);
+  const affectedFeeders = new Set(events.map(event => event.feeder).filter(Boolean));
+  const ongoing = new Set(events
+    .filter(event => String(event.status).toLowerCase() !== "restored")
+    .map(event => event.source_id));
+
+  document.getElementById("unscheduled-rate").textContent = uniqueEvents.length
+    ? `${(uniqueEvents.length / normalizedWeeks).toFixed(1)}/week` : "—";
+  document.getElementById("unscheduled-feeders").textContent = affectedFeeders.size.toLocaleString();
+  document.getElementById("unscheduled-ongoing").textContent = ongoing.size.toLocaleString();
+
+  const daily = new Map();
+  uniqueEvents.forEach(event => {
+    const timestamp = Date.parse(event.started_at);
+    if (!Number.isFinite(timestamp)) return;
+    const date = new Date(timestamp);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    daily.set(key, (daily.get(key) || 0) + 1);
+  });
+  const peak = [...daily.entries()].sort((a, b) => b[1] - a[1] || b[0].localeCompare(a[0]))[0];
+  document.getElementById("unscheduled-peak").textContent = peak
+    ? `${new Date(`${peak[0]}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" })} · ${peak[1]}`
+    : "—";
+
+  const feederStats = new Map();
+  events.forEach(event => {
+    if (!feederStats.has(event.feeder)) feederStats.set(event.feeder, { ids: new Set(), durations: [] });
+    const row = feederStats.get(event.feeder);
+    row.ids.add(event.source_id);
+    const duration = Number(event.duration_minutes) || 0;
+    if (duration > 0) row.durations.push(duration);
+  });
+  const feederRows = [...feederStats.entries()].map(([feeder, row]) => ({
+    feeder,
+    events: row.ids.size,
+    rate: row.ids.size / normalizedWeeks,
+    average: row.durations.length
+      ? row.durations.reduce((sum, duration) => sum + duration, 0) / row.durations.length : 0,
+  })).sort((a, b) => b.events - a.events || a.feeder.localeCompare(b.feeder));
+  document.getElementById("unscheduled-table").innerHTML = feederRows.length
+    ? feederRows.slice(0, 12).map(row => `<tr><td class="feeder-name">${relEscape(relFeederName(row.feeder))}</td><td>${row.events}</td><td>${row.rate.toFixed(1)}</td><td>${relDuration(row.average)}</td></tr>`).join("")
+    : `<tr class="no-results"><td colspan="4">No unscheduled interruptions match this period.</td></tr>`;
+
+  if (reliabilityFrequencyChart) reliabilityFrequencyChart.destroy();
+  const chartStart = starts.length ? new Date(first) : new Date();
+  chartStart.setHours(0, 0, 0, 0);
+  const bucketDays = spanDays > 45 ? 7 : 1;
+  const bucketMs = bucketDays * 86400000;
+  const bucketCount = starts.length ? Math.ceil((last - chartStart.getTime() + 1) / bucketMs) : 0;
+  const buckets = Array.from({ length: bucketCount }, (_, index) => ({
+    start: chartStart.getTime() + index * bucketMs,
+    count: 0,
+  }));
+  starts.forEach(timestamp => {
+    const index = Math.min(buckets.length - 1, Math.floor((timestamp - chartStart.getTime()) / bucketMs));
+    if (index >= 0) buckets[index].count += 1;
+  });
+  const maximum = Math.max(0, ...buckets.map(bucket => bucket.count));
+  reliabilityFrequencyChart = new Chart(document.getElementById("frequency-chart"), {
+    type: "bar",
+    data: {
+      labels: buckets.map(bucket => new Date(bucket.start).toLocaleDateString(undefined, { month: "short", day: "numeric" })),
+      datasets: [{
+        label: bucketDays === 1 ? "Incidents per day" : "Incidents per week",
+        data: buckets.map(bucket => bucket.count),
+        backgroundColor: buckets.map(bucket => relFrequencyColor(bucket.count, maximum) + "dd"),
+        borderRadius: 4,
+        borderWidth: 0,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { displayColors: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { autoSkip: true, maxTicksLimit: 12, font: { size: 9 } } },
+        y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { precision: 0 } },
+      },
+    },
+  });
+}
+
+function relSelectedData() {
+  const days = Number(document.getElementById("reliability-days").value);
+  const cutoff = Date.now() - days * 86400000;
+  return {
+    events: reliabilityEvents.filter(event => (Date.parse(event.started_at) || 0) >= cutoff),
+    reports: reliabilityReports.filter(report => (Date.parse(report.reported_at) || 0) >= cutoff),
+  };
+}
+
+function relRenderChart(rankings) {
+  if (reliabilityChart) reliabilityChart.destroy();
+  const top = rankings.slice(0, 12);
+  reliabilityChart = new Chart(document.getElementById("reliability-chart"), {
+    type: "bar",
+    data: {
+      labels: top.map(row => relFeederName(row.feeder)),
+      datasets: [{
+        label: "Watch score",
+        data: top.map(row => row.score),
+        backgroundColor: top.map(row => RELIABILITY_COLORS[relLevel(row.score).key] + "d9"),
+        borderWidth: 0,
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { afterLabel: context => {
+          const row = top[context.dataIndex];
+          return `${row.events} events · ${relDuration(row.duration)} total`;
+        }}},
+      },
+      scales: {
+        x: { beginAtZero: true, max: 100, grid: { color: "#f1f5f9" }, ticks: { callback: value => `${value}` } },
+        y: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      },
+    },
+  });
+}
+
+function relRenderMap(events, rankings) {
+  if (!reliabilityMap) {
+    reliabilityMap = L.map("reliability-map", { zoomControl: false }).setView([16.51, 120.67], 9);
+    L.control.zoom({ position: "bottomright" }).addTo(reliabilityMap);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors", maxZoom: 18
+    }).addTo(reliabilityMap);
+    reliabilityMapLayer = L.layerGroup().addTo(reliabilityMap);
+  }
+  reliabilityMapLayer.clearLayers();
+  const rankingByFeeder = new Map(rankings.map(row => [row.feeder, row]));
+  const municipalities = new Map();
+  events.forEach(event => {
+    relEventMunicipalities(event.area).forEach(name => {
+      if (!municipalities.has(name)) municipalities.set(name, { events: new Set(), feeders: new Map() });
+      const entry = municipalities.get(name);
+      entry.events.add(event.source_id);
+      entry.feeders.set(event.feeder, (entry.feeders.get(event.feeder) || 0) + 1);
+    });
+  });
+
+  municipalities.forEach((entry, name) => {
+    const center = MUNI_CENTERS[name];
+    if (!center) return;
+    const feederRows = [...entry.feeders.entries()]
+      .map(([feeder, count]) => ({ feeder, count, score: rankingByFeeder.get(feeder)?.score || 0 }))
+      .sort((a, b) => b.score - a.score || b.count - a.count);
+    const level = relLevel(feederRows[0]?.score || 0);
+    L.circleMarker(center, {
+      radius: Math.min(23, 8 + Math.sqrt(entry.events.size) * 1.5),
+      fillColor: RELIABILITY_COLORS[level.key], color: "#fff", weight: 2, fillOpacity: .84,
+    }).bindPopup(`<strong>${relEscape(name)}</strong><br>${entry.events.size} official interruption${entry.events.size === 1 ? "" : "s"}<br><span style="color:#64748b">${feederRows.slice(0, 3).map(row => `${relEscape(relFeederName(row.feeder))} (${row.count})`).join(" · ")}</span>`)
+      .addTo(reliabilityMapLayer);
+  });
+  window.setTimeout(() => reliabilityMap.invalidateSize(), 0);
+}
+
+function relRenderSocial(reports) {
+  const social = document.getElementById("reliability-social");
+  if (!reports.length) {
+    social.innerHTML = `<div class="reliability-note">No outage-related public comment has been archived for this period. Pull Data checks BENECO's featured public post and, when a server-side Facebook access token is configured, recent page posts.</div>`;
+    return;
+  }
+  const grouped = new Map();
+  reports.forEach(report => {
+    if (!grouped.has(report.source_id)) grouped.set(report.source_id, {
+      ...report, feeders: new Set(),
+    });
+    if (report.feeder && report.feeder !== "UNMAPPED") grouped.get(report.source_id).feeders.add(report.feeder);
+  });
+  const comments = [...grouped.values()].sort((a, b) => Date.parse(b.reported_at) - Date.parse(a.reported_at));
+  social.innerHTML = comments.slice(0, 20).map(report => {
+    const suppliedURL = String(report.post_url || "");
+    const url = /^https:\/\/(?:www\.)?facebook\.com\//i.test(suppliedURL)
+      ? suppliedURL : "https://www.facebook.com/benguetelectric";
+    const feederLabel = report.feeders.size
+      ? [...report.feeders].map(relFeederName).join(", ") : "Feeder not yet mapped";
+    const excerpt = report.comment_excerpt || "Outage-related comment archived before excerpts were enabled.";
+    return `<div class="social-signal"><div><strong>${relEscape(report.location || "Location not identified")}</strong><div class="social-comment">“${relEscape(excerpt)}”</div><div class="social-meta"><span>${relEscape(feederLabel)}</span><span>${new Date(report.reported_at).toLocaleString()}</span><span>Anonymous public comment</span></div></div><a href="${relEscape(url)}" target="_blank" rel="noopener">View source ↗</a></div>`;
+  }).join("");
+}
+
+function renderReliability() {
+  const { events, reports } = relSelectedData();
+  const rankings = relRankings(events, reports);
+  const uniqueEventRecords = relUniqueEvents(events);
+  const uniqueEvents = uniqueEventRecords.length;
+  const uniqueReports = new Set(reports.map(report => report.source_id)).size;
+  const completedDurations = uniqueEventRecords.map(event => Number(event.duration_minutes) || 0).filter(minutes => minutes > 0);
+  const average = completedDurations.length
+    ? completedDurations.reduce((sum, minutes) => sum + minutes, 0) / completedDurations.length : 0;
+
+  document.getElementById("rel-events").textContent = uniqueEvents.toLocaleString();
+  document.getElementById("rel-social").textContent = uniqueReports.toLocaleString();
+  document.getElementById("rel-average").textContent = relDuration(average);
+  document.getElementById("rel-top").textContent = rankings[0] ? relFeederName(rankings[0].feeder) : "—";
+  document.getElementById("rel-top-count").textContent = rankings[0]
+    ? `${rankings[0].events} observed interruptions` : "No data in this period";
+
+  const timestamps = events.map(event => Date.parse(event.started_at)).filter(Number.isFinite).sort((a, b) => a - b);
+  document.getElementById("rel-range").textContent = timestamps.length
+    ? `${new Date(timestamps[0]).toLocaleDateString()} – ${new Date(timestamps.at(-1)).toLocaleDateString()}`
+    : "In selected period";
+
+  const state = document.getElementById("reliability-state");
+  state.classList.remove("error");
+  state.textContent = uniqueEvents
+    ? `${uniqueEvents} official unscheduled events across ${rankings.filter(row => row.events).length} feeders. Map locations are approximate municipality centroids.`
+    : "No interruption history is archived for this period. Use Pull Data to collect the latest BENECO records.";
+
+  const tbody = document.getElementById("reliability-table");
+  tbody.innerHTML = rankings.length ? rankings.map(row => {
+    const level = relLevel(row.score);
+    return `<tr><td class="feeder-name">${relEscape(relFeederName(row.feeder))}</td><td><span class="risk-pill risk-${level.key}">${level.label} · ${row.score}</span></td><td>${row.events}</td><td>${relDuration(row.duration)}</td><td>${row.reports}</td><td class="location-cell">${relEscape(row.locationNames.slice(0, 4).join(", ") || "See source area")}</td><td>${row.latest ? new Date(row.latest).toLocaleDateString() : "—"}</td></tr>`;
+  }).join("") : `<tr class="no-results"><td colspan="7">No feeder observations match this period.</td></tr>`;
+
+  relRenderChart(rankings);
+  relRenderFrequency(events);
+  relRenderMap(events, rankings);
+  relRenderSocial(reports);
+}
+
+async function initReliability() {
+  if (reliabilityLoading) return;
+  if (reliabilityLoaded) {
+    renderReliability();
+    return;
+  }
+  reliabilityLoading = true;
+  const state = document.getElementById("reliability-state");
+  state.classList.remove("error");
+  state.textContent = "Loading archived interruption and Facebook signal data…";
+  try {
+    const [outageResponse, facebookResponse] = await Promise.all([
+      fetch("api/outages?days=365", { cache: "no-store" }),
+      fetch("api/facebook-reports?days=365", { cache: "no-store" }),
+    ]);
+    if (!outageResponse.ok) throw new Error(`Interruption history request failed (${outageResponse.status})`);
+    reliabilityEvents = await outageResponse.json();
+    reliabilityReports = facebookResponse.ok ? await facebookResponse.json() : [];
+    if (!Array.isArray(reliabilityEvents) || !Array.isArray(reliabilityReports)) {
+      throw new Error("Reliability API returned an unexpected response");
+    }
+    reliabilityLoaded = true;
+    renderReliability();
+  } catch (error) {
+    console.error("Could not load feeder reliability data", error);
+    state.classList.add("error");
+    state.textContent = "Reliability data is unavailable. Confirm the backend is running, then use Pull Data to archive current interruption records.";
+    document.getElementById("reliability-table").innerHTML = `<tr class="no-results"><td colspan="7">Could not load backend interruption history.</td></tr>`;
+  } finally {
+    reliabilityLoading = false;
+  }
+}
+
+document.getElementById("reliability-days").addEventListener("change", () => {
+  if (reliabilityLoaded) renderReliability();
+});
+
 /* ═══════════════════════ STANDALONE / EXTERNAL PAGES ═══════════════════════
    Pages built in other terminals register here — one line each. The sidenav
    entry, the "open in new tab" link, and the lazy-loaded iframe are all
@@ -1682,7 +2230,7 @@ scrapeForm.addEventListener("submit", async event => {
   scrapeToken.disabled = true;
   scrapeSubmit.disabled = true;
   scrapeCancel.disabled = true;
-  scrapeStatus.textContent = "Downloading and archiving the latest datasets…";
+  scrapeStatus.textContent = "Archiving BENECO records and collecting public social media complaints…";
 
   try {
     const response = await fetch("api/scrape", {
@@ -1694,7 +2242,8 @@ scrapeForm.addEventListener("submit", async event => {
 
     scrapeToken.value = "";
     scrapeLabel.textContent = "Data pulled";
-    scrapeStatus.textContent = `Archived ${result.barangay_feeders} feeder records and ${result.contractors} contractors. Reloading…`;
+    const socialCount = result.facebook_reports || 0;
+    scrapeStatus.textContent = `Archived ${result.barangay_feeders} feeder records, ${result.contractors} contractors, ${result.outages || 0} unscheduled interruption rows, and ${socialCount} social complaint${socialCount === 1 ? "" : "s"}. Reloading…`;
     window.setTimeout(() => window.location.reload(), 900);
   } catch (error) {
     console.error("Could not scrape BENECO data", error);
@@ -1759,6 +2308,7 @@ document.querySelectorAll(".nav-tab").forEach(btn => {
     const pg = document.getElementById(`page-${key}`);
     pg.classList.add("active");
     if (key === "network")     buildNetwork();
+    if (key === "reliability") initReliability();
     if (key === "contractors") initContractorMap();
     if (key.startsWith("ext-")) {
       const iframe = pg.querySelector("iframe");
