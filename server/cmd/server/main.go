@@ -13,6 +13,7 @@ import (
 
 	"github.com/eralmendral/Beneco-Tracker-Dashboard/server/internal/api"
 	"github.com/eralmendral/Beneco-Tracker-Dashboard/server/internal/db"
+	"github.com/eralmendral/Beneco-Tracker-Dashboard/server/internal/scrape"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -52,12 +53,13 @@ func run(logger *slog.Logger) error {
 		return err
 	}
 
+	scrapeRunner := scrape.NewRunner("http://127.0.0.1:"+port, ingestToken)
 	server := &http.Server{
 		Addr:              ":" + port,
-		Handler:           api.NewHandler(db.NewStore(pool), ingestToken, logger),
+		Handler:           api.NewHandler(db.NewStore(pool), ingestToken, logger, scrapeRunner),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       15 * time.Second,
-		WriteTimeout:      30 * time.Second,
+		WriteTimeout:      3 * time.Minute,
 		IdleTimeout:       60 * time.Second,
 	}
 

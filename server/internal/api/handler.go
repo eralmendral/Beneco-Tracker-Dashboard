@@ -6,6 +6,7 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"sync/atomic"
 	"time"
 
 	"github.com/eralmendral/Beneco-Tracker-Dashboard/server/internal/db"
@@ -32,6 +33,12 @@ type Handler struct {
 	store       Store
 	ingestToken string
 	logger      *slog.Logger
+	scraper     Scraper
+	scraping    atomic.Bool
+}
+
+type Scraper interface {
+	Run(context.Context) error
 }
 
 type ingestRequest struct {
@@ -46,17 +53,69 @@ type ingestResponse struct {
 	RecordCount int       `json:"record_count"`
 }
 
-func NewHandler(store Store, ingestToken string, logger *slog.Logger) http.Handler {
-	h := &Handler{store: store, ingestToken: ingestToken, logger: logger}
+type scrapeResponse struct {
+	Status          string `json:"status"`
+	BarangayFeeders int    `json:"barangay_feeders"`
+	Contractors     int    `json:"contractors"`
+}
+
+func NewHandler(store Store, ingestToken string, logger *slog.Logger, scraper Scraper) http.Handler {
+	h := &Handler{store: store, ingestToken: ingestToken, logger: logger, scraper: scraper}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /api/healthz", h.health)
 	mux.HandleFunc("POST /api/ingest", h.ingest)
+	mux.HandleFunc("POST /api/scrape", h.scrape)
 	mux.HandleFunc("GET /api/scrape-runs", h.scrapeRuns)
 	mux.HandleFunc("GET /api/barangay-feeders/latest", h.latestBarangayFeeders)
 	mux.HandleFunc("GET /api/barangay-feeders", h.barangayFeedersByRun)
 	mux.HandleFunc("GET /api/contractors/latest", h.latestContractors)
 	mux.HandleFunc("GET /api/contractors", h.contractorsByRun)
 	return h.middleware(mux)
+}
+
+func (h *Handler) scrape(w http.ResponseWriter, r *http.Request) {
+	if !validBearerToken(r.Header.Get("Authorization"), h.ingestToken) {
+		writeError(w, http.StatusUnauthorized, "invalid bearer token")
+		return
+	}
+	if h.scraper == nil {
+		writeError(w, http.StatusServiceUnavailable, "scraper unavailable")
+		return
+	}
+	if !h.scraping.CompareAndSwap(false, true) {
+		writeError(w, http.StatusConflict, "scrape already in progress")
+		return
+	}
+	defer h.scraping.Store(false)
+
+	ctx, cancel := context.WithTimeout(r.Context(), 2*time.Minute)
+	defer cancel()
+	if err := h.scraper.Run(ctx); err != nil {
+		if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+			h.logger.Error("scrape BENECO data", "error", err)
+			writeError(w, http.StatusGatewayTimeout, "scrape timed out")
+			return
+		}
+		h.logger.Error("scrape BENECO data", "error", err)
+		writeError(w, http.StatusBadGateway, "scrape failed")
+		return
+	}
+
+	barangays, err := h.store.LatestBarangayFeeders(r.Context())
+	if err != nil {
+		h.internalError(w, "read scraped barangay feeders", err)
+		return
+	}
+	contractors, err := h.store.LatestContractors(r.Context())
+	if err != nil {
+		h.internalError(w, "read scraped contractors", err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, scrapeResponse{
+		Status:          "ok",
+		BarangayFeeders: len(barangays),
+		Contractors:     len(contractors),
+	})
 }
 
 func (h *Handler) middleware(next http.Handler) http.Handler {

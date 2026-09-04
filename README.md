@@ -23,6 +23,9 @@ python -m http.server 8000 --directory frontend
 
 Open <http://127.0.0.1:8000/>. When the API is unavailable, the dashboard uses the
 bundled `frontend/data.json` and `frontend/contractors.json` snapshots.
+When the API is available, operators can use **Pull Data** in the sidebar and
+enter the configured ingest token to archive fresh source data. The token is used for
+that request only and is not stored by the browser.
 
 To run the API, copy `server/.env.example` to `server/.env`, set a reachable
 PostgreSQL `DATABASE_URL` and a long random `INGEST_TOKEN`, then:

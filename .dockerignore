@@ -1,0 +1,12 @@
+.git
+.github
+.idea
+.qa
+.vercel
+test-results
+frontend
+server/.env
+server/beneco-server
+server/*.exe
+scripts/__pycache__
+*.py[cod]

@@ -17,16 +17,21 @@ import (
 
 type fakeStore struct {
 	healthErr           error
+	barangayRun         model.ScrapeRun
 	contractorRun       model.ScrapeRun
+	ingestedBarangays   []model.BarangayFeeder
 	ingestedContractors []model.Contractor
 	latestBarangays     []model.BarangayFeeder
 	latestBarangayErr   error
+	latestContractors   []model.Contractor
+	latestContractorErr error
 }
 
 func (f *fakeStore) Health(context.Context) error { return f.healthErr }
 
-func (f *fakeStore) IngestBarangayFeeders(context.Context, []model.BarangayFeeder) (model.ScrapeRun, error) {
-	return model.ScrapeRun{}, errors.New("unexpected call")
+func (f *fakeStore) IngestBarangayFeeders(_ context.Context, records []model.BarangayFeeder) (model.ScrapeRun, error) {
+	f.ingestedBarangays = records
+	return f.barangayRun, nil
 }
 
 func (f *fakeStore) IngestContractors(_ context.Context, records []model.Contractor) (model.ScrapeRun, error) {
@@ -47,16 +52,22 @@ func (f *fakeStore) BarangayFeedersByRun(context.Context, int64) ([]model.Barang
 }
 
 func (f *fakeStore) LatestContractors(context.Context) ([]model.Contractor, error) {
-	return []model.Contractor{}, nil
+	return f.latestContractors, f.latestContractorErr
 }
 
 func (f *fakeStore) ContractorsByRun(context.Context, int64) ([]model.Contractor, error) {
 	return []model.Contractor{}, nil
 }
 
+type fakeScraper struct {
+	err error
+}
+
+func (f *fakeScraper) Run(context.Context) error { return f.err }
+
 func testHandler(store Store) http.Handler {
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-	return NewHandler(store, "test-token", logger)
+	return NewHandler(store, "test-token", logger, &fakeScraper{})
 }
 
 func TestIngestRejectsMissingToken(t *testing.T) {
@@ -147,5 +158,49 @@ func TestHealthReportsDatabaseFailure(t *testing.T) {
 
 	if response.Code != http.StatusServiceUnavailable {
 		t.Fatalf("status = %d, want %d", response.Code, http.StatusServiceUnavailable)
+	}
+}
+
+func TestScrapeRejectsMissingToken(t *testing.T) {
+	request := httptest.NewRequest(http.MethodPost, "/api/scrape", nil)
+	response := httptest.NewRecorder()
+
+	testHandler(&fakeStore{}).ServeHTTP(response, request)
+
+	if response.Code != http.StatusUnauthorized {
+		t.Fatalf("status = %d, want %d", response.Code, http.StatusUnauthorized)
+	}
+}
+
+func TestScrapeReturnsLatestRecordCounts(t *testing.T) {
+	store := &fakeStore{
+		latestBarangays:   []model.BarangayFeeder{{BarangayID: 1}, {BarangayID: 2}},
+		latestContractors: []model.Contractor{{Company: "Example"}},
+	}
+	request := httptest.NewRequest(http.MethodPost, "/api/scrape", nil)
+	request.Header.Set("Authorization", "Bearer test-token")
+	response := httptest.NewRecorder()
+
+	testHandler(store).ServeHTTP(response, request)
+
+	if response.Code != http.StatusCreated {
+		t.Fatalf("status = %d, want %d; body = %s", response.Code, http.StatusCreated, response.Body.String())
+	}
+	if got := response.Body.String(); got != "{\"status\":\"ok\",\"barangay_feeders\":2,\"contractors\":1}\n" {
+		t.Fatalf("body = %s", got)
+	}
+}
+
+func TestScrapeReportsRunnerFailure(t *testing.T) {
+	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
+	handler := NewHandler(&fakeStore{}, "test-token", logger, &fakeScraper{err: errors.New("upstream unavailable")})
+	request := httptest.NewRequest(http.MethodPost, "/api/scrape", nil)
+	request.Header.Set("Authorization", "Bearer test-token")
+	response := httptest.NewRecorder()
+
+	handler.ServeHTTP(response, request)
+
+	if response.Code != http.StatusBadGateway {
+		t.Fatalf("status = %d, want %d", response.Code, http.StatusBadGateway)
 	}
 }

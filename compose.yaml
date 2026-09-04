@@ -1,7 +1,8 @@
 services:
   api:
     build:
-      context: ./server
+      context: .
+      dockerfile: server/Dockerfile
     env_file:
       - ./server/.env
     restart: unless-stopped

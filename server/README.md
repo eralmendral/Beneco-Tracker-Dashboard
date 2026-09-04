@@ -6,8 +6,11 @@ transactional: either the run and all records are committed, or none are.
 ## Configuration
 
 - `DATABASE_URL` — PostgreSQL connection URL (required).
-- `INGEST_TOKEN` — long random bearer token used only by the scraper (required).
+- `INGEST_TOKEN` — long random bearer token used by ingest and manual scrape requests (required).
 - `PORT` — HTTP port; defaults to `8080`.
+- `SCRAPER_PYTHON` — optional Python executable override.
+- `SCRAPER_SCRIPT` — optional path to `scrape_beneco.py`.
+- `SCRAPER_OUTPUT_DIR` — optional refreshed-JSON destination; defaults to a temporary directory.
 
 Copy `.env.example` to `.env` for Docker Compose. The Go process reads environment
 variables directly and does not load dotenv files itself.
@@ -16,6 +19,7 @@ variables directly and does not load dotenv files itself.
 
 - `GET /api/healthz` — process and database health.
 - `POST /api/ingest` — authenticated snapshot ingest.
+- `POST /api/scrape` — authenticated live BENECO scrape and ingest. Only one can run at a time.
 - `GET /api/scrape-runs?source=barangay_feeders|contractors` — run history.
 - `GET /api/barangay-feeders/latest` — latest barangay snapshot.
 - `GET /api/contractors/latest` — latest contractor snapshot.
@@ -33,14 +37,21 @@ curl -X POST http://127.0.0.1:8080/api/ingest \
 
 Public GET responses allow cross-origin reads. Browser-originated POST requests are
 not granted CORS access, and the token must never be shipped in frontend code.
+The dashboard's **Pull Data** button asks the operator for the token at action time
+and does not store it. A scrape request stays open until both source snapshots have
+been archived or the two-minute server timeout is reached.
 
 ## Development
 
 ```powershell
+python -m pip install -r ..\scripts\requirements.txt
 go test ./...
 go build ./...
 go run ./cmd/server
 ```
+
+The Docker image includes Python, the scraper, and its pinned requirements. For a
+direct local Go run, install the Python requirements first as shown above.
 
 Migrations are embedded in the binary and tracked in `schema_migrations`. This
 repository has no local PostgreSQL container; database integration verification
